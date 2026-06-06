@@ -1,0 +1,237 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <template id="career_landing_template" name="Career Portal — Landing Page">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+
+            <div style="display:flex;flex-direction:column;min-height:100vh;">
+
+            <nav class="navbar navbar-light bg-white border-bottom shadow-sm sticky-top">
+                <div class="container">
+                    <a href="/" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none">
+                        <t t-if="company_logo">
+                            <img t-attf-src="data:image/png;base64,{{ company_logo }}"
+                                height="36"
+                                class="rounded"
+                                t-att-alt="company_name"
+                                style="object-fit:contain;"/>
+                        </t>
+                        <span class="fw-bold fs-5" t-out="company_name"/>
+                    </a>
+                    <div class="navbar-nav flex-row gap-3">
+                        <a href="/careers"
+                            class="nav-link fw-semibold"
+                            style="color:#714B67;">
+                            Open Positions
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            <div style="flex:1;">
+                <section class="py-5" style="background: linear-gradient(135deg, #f3eef9 0%, #eef2fb 100%);">
+                    <div class="container py-4 text-center">
+                        <t t-if="company_logo">
+                            <img t-attf-src="data:image/png;base64,{{ company_logo }}"
+                                height="80"
+                                class="mb-4 rounded shadow-sm"
+                                t-att-alt="company_name"
+                                style="object-fit:contain;"/>
+                        </t>
+
+                        <h1 class="display-5 fw-bold mb-3" style="color:#1c1c2e;">
+                            Join the <span style="color:#714B67;" t-out="company_name"/> Team
+                        </h1>
+                        <p class="lead text-muted mb-4 mx-auto" style="max-width:560px;">
+                            We are looking for talented individuals who are passionate about
+                            making a difference. Explore our open positions and find your fit.
+                        </p>
+
+                        <a href="/careers"
+                            id="btn-hero-careers"
+                            class="btn btn-primary btn-lg px-5"
+                            style="background-color:#714B67;border-color:#714B67;">
+                            View Open Positions
+                            <i class="fa fa-arrow-right ms-2"/>
+                        </a>
+                    </div>
+                </section>
+
+                <section class="py-5 bg-white">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-7">
+                                <h2 class="fw-bold text-center mb-4" style="color:#1c1c2e;">
+                                    Contact Us
+                                </h2>
+
+                                <div class="card border-0 shadow-sm rounded-3">
+                                    <div class="card-body p-4">
+                                        <dl class="row mb-0">
+                                            <t t-if="company_email">
+                                                <dt class="col-sm-3 text-muted fw-normal">
+                                                    <i class="fa fa-envelope me-1"/>
+                                                    Email
+                                                </dt>
+                                                <dd class="col-sm-9">
+                                                    <a t-att-href="'mailto:' + company_email"
+                                                    class="text-decoration-none"
+                                                    style="color:#714B67;"
+                                                    t-out="company_email"/>
+                                                </dd>
+                                            </t>
+
+                                            <t t-if="company_phone">
+                                                <dt class="col-sm-3 text-muted fw-normal">
+                                                    <i class="fa fa-phone me-1"/>
+                                                    Phone
+                                                </dt>
+                                                <dd class="col-sm-9">
+                                                    <a t-att-href="'tel:' + company_phone"
+                                                    class="text-decoration-none text-dark"
+                                                    t-out="company_phone"/>
+                                                </dd>
+                                            </t>
+
+                                            <t t-if="company_address">
+                                                <dt class="col-sm-3 text-muted fw-normal">
+                                                    <i class="fa fa-map-marker me-1"/>
+                                                    Address
+                                                </dt>
+                                                <dd class="col-sm-9" t-out="company_address"/>
+                                            </t>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <footer class="border-top py-3 bg-light text-center text-muted" style="font-size:0.875rem;">
+                ©
+                <t t-out="company_name"/>
+                · All rights reserved
+            </footer>
+
+            </div>
+
+        </t>
+    </template>
+
+    <template id="career_list_template" name="Career Portal — Careers Listing">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+
+            <div style="display:flex;flex-direction:column;min-height:100vh;">
+
+                <nav class="navbar navbar-light bg-white border-bottom shadow-sm sticky-top">
+                    <div class="container">
+                        <a href="/" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none">
+                            <t t-if="company_logo">
+                                <img t-attf-src="data:image/png;base64,{{ company_logo }}"
+                                    height="36"
+                                    class="rounded"
+                                    t-att-alt="company_name"
+                                    style="object-fit:contain;"/>
+                            </t>
+                            <span class="fw-bold fs-5" t-out="company_name"/>
+                        </a>
+                        <div class="navbar-nav flex-row gap-3">
+                            <a href="/" class="nav-link text-muted">Home</a>
+                            <a href="/careers"
+                            class="nav-link fw-semibold"
+                            style="color:#714B67;">
+                                Open Positions
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+
+                <div class="py-4 border-bottom" style="background: linear-gradient(135deg, #f3eef9 0%, #eef2fb 100%);">
+                    <div class="container text-center py-2">
+                        <h1 class="fw-bold mb-1" style="color:#1c1c2e;">Open Positions</h1>
+                        <p class="text-muted mb-0">Find a role that matches your passion and expertise.</p>
+                    </div>
+                </div>
+
+                <section class="py-5 bg-light" style="flex:1;">
+                    <div class="container">
+
+                        <t t-if="jobs">
+                        <div class="row g-4">
+                            <t t-foreach="jobs" t-as="job">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="card h-100 border shadow-sm rounded-3"
+                                            t-att-id="'job-card-' + str(job.id)">
+                                        <div class="card-body d-flex flex-column p-4">
+                                            <t t-if="job.department_id">
+                                                <span class="badge mb-2"
+                                                    style="background-color:#f0e6f5;color:#714B67;width:fit-content;font-weight:500;">
+                                                    <t t-out="job.department_id.name"/>
+                                                </span>
+                                            </t>
+
+                                            <h5 class="card-title fw-bold mb-2" style="color:#1c1c2e;">
+                                                <t t-out="job.name"/>
+                                            </h5>
+                                            <div class="card-text text-muted small mb-3 flex-grow-1"
+                                                style="overflow:hidden;display:-webkit-box;
+                                                        -webkit-line-clamp:4;-webkit-box-orient:vertical;">
+                                                <t t-if="job.description">
+                                                    <t t-out="job.description"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <em>No description provided.</em>
+                                                </t>
+                                            </div>
+
+                                            <div class="mt-auto">
+                                                <a t-attf-href="/apply?job_id={{ job.id }}"
+                                                   class="btn btn-primary w-100"
+                                                   style="background-color:#714B67;border-color:#714B67;"
+                                                   t-att-id="'btn-apply-' + str(job.id)">
+                                                    Apply Now
+                                                </a>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+
+                    <t t-else="">
+                        <div class="text-center py-5" id="no-positions-message">
+                            <i class="fa fa-search fa-3x text-muted mb-3 d-block"/>
+                            <h4 class="text-muted">No Open Positions Right Now</h4>
+                            <p class="text-muted">
+                                We don't have any open roles at the moment — check back soon!
+                            </p>
+                            <a href="/"
+                               class="btn btn-outline-secondary mt-2">
+                                <i class="fa fa-home me-1"/>
+                                Back to Home
+                            </a>
+                        </div>
+                    </t>
+
+                </div>
+            </section>
+
+            <footer class="border-top py-3 bg-white text-center text-muted" style="font-size:0.875rem;">
+                ©
+                <t t-out="company_name"/>
+                · All rights reserved
+            </footer>
+
+            </div>
+
+        </t>
+    </template>
+
+</odoo>

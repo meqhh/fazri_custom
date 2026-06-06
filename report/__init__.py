@@ -1,0 +1,1 @@
+from . import contract_base_template

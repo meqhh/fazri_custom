@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <template id="apply_form_template" name="Apply Form Template">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <div class="container-sm mt-5 apply-form">
+                <div class="d-flex justify-content-center mb-3 text-center column">
+                    <h3>Apply for a Position</h3>
+                </div>
+                <div class="container pb-5">
+                    <form>
+                        <div class="column" name="section_apply">
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-header bg-dark text-white">
+                                    <h5 class="mb-0">Application Form</h5>
+                                </div>
+                                <div class="card-body">
+                                    <section>
+                                        <div class="form-group">
+                                            <label for="partner_name" style="font-weight:bold;">
+                                                Full Name
+                                            </label>
+                                            <input type="text" name="partner_name" id="partner_name" class="form-control mb-3" placeholder="Your full name" required="1"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email_from" style="font-weight:bold;">
+                                                Email Address
+                                            </label>
+                                            <input type="email" name="email_from" id="email_from" class="form-control mb-3" placeholder="email@example.com" required="1"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="partner_phone" style="font-weight:bold;">
+                                                Phone Number
+                                            </label>
+                                            <input type="text" name="partner_phone" id="partner_phone" class="form-control mb-3" placeholder="+62 812-3456-7890" required="1"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="job_id" style="font-weight:bold;">
+                                                Job Position
+                                            </label>
+
+                                            <t t-if="selected_job">
+                                                <div class="input-group mb-3">
+                                                    <input type="text"
+                                                           id="job_id_display"
+                                                           class="form-control bg-light"
+                                                           t-att-value="selected_job.name"
+                                                           readonly="readonly"/>
+                                                    <span class="input-group-text"
+                                                          title="This field is locked to the position you selected.">
+                                                        <i class="fa fa-lock"/>
+                                                    </span>
+                                                </div>
+                                                <input type="hidden"
+                                                       id="job_id"
+                                                       name="job_id"
+                                                       t-att-value="selected_job.id"/>
+                                            </t>
+
+                                            <t t-else="">
+                                                <select class="form-select w-100 mb-3" name="job_id" id="job_id" required="1">
+                                                    <option value="">Select a Position</option>
+                                                    <t t-foreach="jobs" t-as="job">
+                                                        <option t-att-value="job.id">
+                                                            <t t-out="job.name"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </t>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="type_id" style="font-weight:bold;">
+                                                Degree
+                                            </label>
+                                            <select class="form-select w-100 mb-3" name="type_id" id="type_id">
+                                                <option value="">Select Degree</option>
+                                                <t t-foreach="degrees" t-as="degree">
+                                                    <option t-att-value="degree.id">
+                                                        <t t-out="degree.name"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="source_id" style="font-weight:bold;">
+                                                Source
+                                            </label>
+                                            <select class="form-select w-100 mb-3" name="source_id" id="source_id">
+                                                <option value="">How did you find us?</option>
+                                                <t t-foreach="sources" t-as="source">
+                                                    <option t-att-value="source.id">
+                                                        <t t-out="source.name"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cover_letter" style="font-weight:bold;">
+                                                Cover Letter / Summary
+                                            </label>
+                                            <textarea class="form-control mb-3" name="cover_letter" id="cover_letter" rows="4" placeholder="Tell us about yourself and why you are interested in this position..."></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="resume" style="font-weight:bold;">
+                                                Upload Resume
+                                            </label>
+                                            <div class="mt-1 mb-3">
+                                                <input type="file" name="resume" id="resume" class="d-none" accept=".pdf,.doc,.docx,image/*"/>
+                                                <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('resume').click();">
+                                                    <i class="fa fa-upload me-1"/>Upload
+                                                </button>
+                                                <span id="resume-filename" class="ms-2 text-muted" style="font-size: 0.9em;"></span>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                            <footer class="mt-2">
+                                <button type="button" id="button-apply-submit" class="btn btn-primary">
+                                    <i class="fa fa-paper-plane me-1"/>Submit Application
+                                </button>
+                            </footer>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="apply_thankyou_template" name="Apply Thank You Template">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <div class="container-sm mt-5">
+                <div class="text-center py-5">
+                    <h2 class="mb-3">Thank You, <t t-out="name"/>!</h2>
+                    <p class="text-muted" style="font-size: 1.1em;">
+                        Your application has been submitted successfully.<br/>
+                        Our HR team will review your application and get back to you soon.
+                    </p>
+                    <button class="btn btn-primary mt-3" onclick="window.close(); window.location.href='/apply';">
+                        Close Page
+                    </button>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

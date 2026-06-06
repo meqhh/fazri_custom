@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="hr_contract_template_tree_view" model="ir.ui.view">
+        <field name="name">hr.contract.template.tree.view</field>
+        <field name="model">hr.contract.template</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_contract_template_form_view" model="ir.ui.view">
+        <field name="name">hr.contract.template.form.view</field>
+        <field name="model">hr.contract.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="test_generate" type="object" string="Test Generate" context="{'testing': 1}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title pe-0">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1 class="d-flex justify-content-between align-items-center">
+                            <field name="name" options="{'line_breaks': False}" widget="text" placeholder="Contract Name"/>
+                        </h1>
+                    </div>
+                    <field name="template_line_ids">
+                        <tree>
+                            <field name="sequence" widget="handle"/>
+                            <field name="body_type"/>
+                            <field name="text_align"/>
+                            <field name="class_name"/>
+                            <field name="font_size"/>
+                        </tree>
+                    </field> 
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_contract_template_line_form_view" model="ir.ui.view">
+        <field name="name">hr.contract.template.line.form.view</field>
+        <field name="model">hr.contract.template.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <separator string="Body" style="margin-top: 5px !important;"/>
+                            <field name="body_type"/>
+                            <field name="class_name"/>
+                            <separator string="Text"/>
+                            <field name="text_type"/>
+                            <field name="text_align"/>
+                            <field name="font_size"/>
+                        </group>
+                        <group>
+                            <separator string="Padding" style="margin-top: 5px !important;"/>
+                            <field name="padding_x"/>
+                            <field name="padding_y"/>
+                            <separator string="Margin"/>
+                            <field name="margin_top"/>
+                            <field name="margin_bottom"/>
+                        </group>
+                    </group>
+                    <field name="body" placeholder="Body Value"/>
+                    <group colspan="4">
+                        <div class="w-100 d-flex flex-row gap-3" colspan="2">
+                            <div class="w-50 opacity-75 text-muted" colspan="2">
+                                <span> Available variables: </span>
+                                <ul>
+                                    <li><code>offer</code>: salary.offer object</li>
+                                    <li><code>applicant</code>: hr.applicant object</li>
+                                </ul>   
+                            </div>
+                        </div>
+                    </group>
+                    <field name="list_ids" nolabel="1" invisible="body_type not in ['listed', 'unlisted']">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="body"/>
+                        </tree>
+                    </field>
+                    <field name="table_ids" nolabel="1" invisible="body_type != 'table'">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="label"/>
+                            <field name="value"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_contract_template_action" model="ir.actions.act_window">
+        <field name="name">Contract Templates</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.contract.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="fazri_custom.hr_contract_template_tree_view"/>
+    </record>
+
+    <menuitem 
+        id="hr_contract_template"
+        name="Contract Templates"
+        action="hr_contract_template_action"
+        parent="hr_contract.menu_human_resources_configuration_contract"
+        sequence="4"
+    />
+
+</odoo>

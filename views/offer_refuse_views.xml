@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    
+    <record id="offer_refuse_tree_view" model="ir.ui.view">
+        <field name="name">offer.refuse.tree.view</field>
+        <field name="model">offer.refuse</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <field name="name"/>
+                <field name="reject_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="offer_refuse_form_view" model="ir.ui.view">
+        <field name="name">offer.refuse.form.view</field>
+        <field name="model">offer.refuse</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <header>
+                    <button string="Resend Offer" name="resend_offer" class="btn-primary" invisible="state != 'draft'" type="object"/>
+                    <button string="Postpone" name="postpone" class="btn-secondary" invisible="state != 'draft'" type="object"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title pe-0">
+                        <label for="salary_offer_id" class="oe_edit_only"/>
+                        <h1 class="d-flex justify-content-between align-items-center">
+                            <field name="salary_offer_id" options="{'line_breaks': False}" placeholder="Candidate Name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="reject_date" readonly="1"/>
+                        </group>
+                        <notebook>
+                            <page name="Reject Reason">
+                                <field name="reason" readonly="1"/>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_offer_refuse" model="ir.actions.act_window">
+        <field name="name">Refused Offer</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">offer.refuse</field>
+        <field name="view_id" ref='fazri_custom.offer_refuse_tree_view'/>
+    </record>
+
+    <menuitem 
+        id="manu_offer_refuse"
+        name="Refused Offer"
+        parent="hr_recruitment.menu_crm_case_categ0_act_job"
+        sequence="20"
+        action="fazri_custom.action_offer_refuse"
+    />
+</odoo>

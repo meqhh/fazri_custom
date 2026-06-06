@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_salary_offer,salary.offer,model_salary_offer,,1,1,1,1
+access_hr_contract_template,hr.contract.template,model_hr_contract_template,,1,1,1,1
+access_hr_contract_template_line,hr.contract.template.line,model_hr_contract_template_line,,1,1,1,1
+access_hr_contract_template_list,hr.contract.template.list,model_hr_contract_template_list,,1,1,1,1
+access_hr_contract_template_table,hr.contract.template.table,model_hr_contract_template_table,,1,1,1,1
+access_hr_religion,hr.religion,model_hr_religion,,1,1,1,1
+access_offer_refuse,offer.refuse,model_offer_refuse,,1,1,1,1
+access_api_log,api.log,model_api_log,,1,1,1,1
+access_api_log_response,api.log.response,model_api_log_response,,1,1,1,1
+access_whatsapp_conf,whatsapp.conf,model_whatsapp_conf,,1,1,1,1
+access_whatsapp_applicant_wizard,whatsapp.applicant.wizard,model_whatsapp_applicant_wizard,,1,1,1,1

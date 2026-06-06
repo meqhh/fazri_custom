@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="source_instagram" model="utm.source">
+            <field name="name">Instagram</field>
+        </record>
+
+        <record id="source_glints" model="utm.source">
+            <field name="name">Glints</field>
+        </record>
+
+        <record id="source_job_street" model="utm.source">
+            <field name="name">Job Street</field>
+        </record>
+
+        <record model="utm.source" id="utm.utm_source_search_engine">
+            <field name="name">Google</field>
+        </record>
+
+        <record model="utm.source" id="utm.utm_source_mailing">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record model="utm.source" id="utm.utm_source_monster">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record model="utm.source" id="utm.utm_source_glassdoor">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record model="utm.source" id="utm.utm_source_craigslist">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record model="utm.source" id="utm.utm_source_twitter">
+            <field name="active" eval="False"/>
+        </record>
+    </data>
+</odoo>

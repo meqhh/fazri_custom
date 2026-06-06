@@ -1,0 +1,244 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <template id="salary_offer_template" name="Salary Offer Form Template">
+        <t t-call="web.frontend_layout">
+            <script
+                src="https://cdn.jsdelivr.net/npm/signature_pad@5.0.10/dist/signature_pad.umd.min.js">
+            </script>
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <div class="container-sm mt-5 salary-offer-form">
+                <div class="d-flex justify-content-center mb-3 text-center column">
+                    <h3>Please complete this form and sign to accept out work contract</h3>
+                </div>
+                <div class="container pb-5">
+                    <form>
+                        <div class="column d-none" name="section_1">
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-header bg-dark text-white">
+                                    <h5 class="mb-0">Personal Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <section>
+                                        <div class="form-group">
+                                            <label for="name" style="font-weight:bold;">
+                                                Full Name
+                                            </label>
+                                            <input type="text" name="name" id="name" class="form-control mb-3 js_name" placeholder="Name" t-att-value="offer.name" disabled="1"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="birth_date" style="font-weight:bold;">
+                                                Birth Date
+                                            </label>
+                                            <input type="date" name="birth_date" id="birth_date" class="form-control mb-3" placeholder="Birth Date"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="birth_place" style="font-weight:bold;">
+                                                Birth Place
+                                            </label>
+                                            <input type="text" name="birth_place" id="birth_place" class="form-control mb-3" placeholder="Birth Place"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="marital_status" style="font-weight:bold;">
+                                                Marital Status
+                                            </label>
+                                            <select class="form-select w-100 mb-3" name="marital_status" id="marital_status">
+                                                <option value="">Marital Status</option>
+                                                <option value="married">Married</option>
+                                                <option value="single">Single</option>
+                                                <option value="divorced">Divorced</option>
+                                                <option value="widowed">Widowed</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="citizenship" style="font-weight:bold;">
+                                                Citizenship
+                                            </label>
+                                            <!-- <input type="text" name="citizenship" id="citizenship" class="form-control mb-3" placeholder="Citizenship"/> -->
+                                            <select class="form-select w-100 mb-3" name="citizenship" id="citizenship">
+                                                <option value="">Citizenship</option>
+                                                <t t-foreach="countries" t-as="country">
+                                                    <option t-att-value="country.id">
+                                                        <t t-out="country.name"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="religion" style="font-weight:bold;">
+                                                Religion
+                                            </label>
+                                            <select class="form-select w-100 mb-3" name="religion" id="religion">
+                                                <option value="">Religion</option>
+                                                <t t-foreach="religions" t-as="religion">
+                                                    <option t-att-value="religion.id">
+                                                        <t t-out="religion.name"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email_address" style="font-weight:bold;">
+                                                Email Address
+                                            </label>
+                                            <input type="text" name="email_address" id="email_address" class="form-control mb-3" placeholder="email@example.com" t-att-value="offer.email_address"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="phone" style="font-weight:bold;">
+                                                Phone Number
+                                            </label>
+                                            <input type="text" name="phone" id="phone" class="form-control mb-3" t-att-placeholder="'+' + str(offer.company_id.country_id.phone_code) + ' 123-4567-8901'" t-att-value="offer.phone_number"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="identity_number" style="font-weight:bold;">
+                                                Identity Number (NIK)
+                                            </label>
+                                            <input type="text" name="identity_number" id="identity_number" class="form-control mb-3" placeholder="1234567890"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="npwp" style="font-weight:bold;">
+                                                NPWP
+                                            </label>
+                                            <input type="text" name="npwp" id="npwp" class="form-control mb-3" placeholder="1234567890"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="home_address" style="font-weight:bold;">
+                                                Home Address
+                                            </label>
+                                            <input type="text" name="home_address" id="home_address" class="form-control mb-3" placeholder="123 Example Street"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="mother_name" style="font-weight:bold;">
+                                                Mother's Name
+                                            </label>
+                                            <input type="text" name="mother_name" id="mother_name" class="form-control mb-3" placeholder="Jane Doe"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="formal_photo" style="font-weight:bold;">
+                                                Formal Photo of You
+                                            </label>
+                                            <div class="mt-1 mb-3">
+                                                <input type="file" name="formal_photo" id="formal_photo" class="d-none" accept="image/*"/>
+                                                <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('formal_photo').click();">
+                                                    <i class="fa fa-upload me-1"/>Upload
+                                                </button>
+                                                <span id="photo-filename" class="ms-2 text-muted" style="font-size: 0.9em;"></span>
+                                            </div>
+                                            <div class="mt-2">
+                                                <img id="photo-preview" src="" alt="Image Preview" style="max-width: 250px; display: none; border: 1px solid #ccc; padding: 5px;"/>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                            <footer class="mt-2">
+                                <a role="button"
+                                    name="next_section"
+                                    class="btn btn-primary order-lg-3 w-lg-auto ms-lg-auto"
+                                    href="#">
+                                    Next
+                                    <i class="fa fa-angle-right ms-2 fw-light"/>
+                                </a>
+                                <a role="button"
+                                    name="open_refuse"
+                                    class="btn btn-danger order-lg-3 w-lg-auto ms-lg-auto"
+                                    href="#">
+                                    Refuse
+                                </a>
+                            </footer>
+                        </div>
+                        <div class="column d-none" name="section_2">
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-header bg-dark text-white">
+                                    <h5 class="mb-0">Salary &amp; Banking</h5>
+                                </div>
+                                <div class="card-body">
+                                    <section>
+                                        <div class="form-group">
+                                            <label for="bank_id" style="font-weight:bold;">
+                                                Bank
+                                            </label>
+                                            <select class="form-select w-100 mb-3" name="bank_id" id="bank_id">
+                                                <option value="">Bank</option>
+                                                <t t-foreach="banks" t-as="bank">
+                                                    <option t-att-value="bank.id">
+                                                        <t t-out="bank.name"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="bank_number" style="font-weight:bold;">
+                                                Bank Number
+                                            </label>
+                                            <input type="text" name="bank_number" id="bank_number" class="form-control mb-3" placeholder="987654321"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="wage" style="font-weight:bold;">
+                                                Wage Amount
+                                            </label>
+                                            <input type="text" name="wage" id="wage" class="form-control mb-3" t-att-value="offer.salary_offer" disabled="1"/>
+                                        </div>
+                                        <div class="mb-2">
+                                            <a t-att-href="preview_url"
+                                            target="_blank"
+                                            class="btn btn-outline-primary">
+                                                View Contract
+                                            </a>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="signature" style="font-weight:bold;">Signature</label>
+                                            <div id="signature-pad" class="signature-pad" style="width:100%; max-width:500px;">
+                                                <canvas id="signature-canvas" style="width:100%; max-width:300px; max-height:150px; border:1px solid #000; border-radius:4px;" class="bg-light"></canvas>
+                                            </div>
+                                            <small class="error-msg mx-1 d-none" style="color:red;" data-field="signature"></small>
+                                            <input type="hidden" id="signature" name="signature" />
+                                            <button type="button" id="clear-signature" class="btn btn-secondary mt-2 d-none">Clear Signature</button>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                            <footer class="mt-2">
+                                <a role="button"
+                                    name="previous_section"
+                                    class="btn btn-secondary order-lg-3 w-lg-auto ms-lg-auto"
+                                    href="#">
+                                    <i class="fa fa-angle-left me-2 fw-light"/>
+                                    Previous
+                                </a>
+                                <button
+                                    type="button"
+                                    id="button-submit"
+                                    class="btn btn-success"
+                                    name="submit"
+                                >
+                                    Accept
+                                </button>
+                                <a role="button"
+                                    name="open_refuse"
+                                    class="btn btn-danger order-lg-3 w-lg-auto ms-lg-auto"
+                                    href="#">
+                                    Refuse
+                                </a>
+                            </footer>
+                        </div>
+                    </form>
+                    <form class="mt-4"> 
+                        <div class="column d-none" name="section_refuse">
+                            <div class="form-group">
+                                <label for="refuse_reason" style="font-weight:bold;">
+                                    Refuse Reason
+                                </label>
+                                <textarea class="form-control" name="refuse_reason" id="refuse_reason" rows="3"></textarea>
+                            </div>
+                            <footer class="mt-2">
+                                <button type="button" id="submit-refuse"
+                                    class="btn btn-danger">Refuse</button>
+                            </footer>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

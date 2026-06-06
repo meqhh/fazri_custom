@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <template id="contract_base_template">
+        <t t-call="web.basic_layout">
+            <style>
+                h1 { font-size: 28px; }
+                h2 { font-size: 22px; }
+                h3 { font-size: 18px; }
+            </style>
+            <div class="page container">
+                <t t-foreach="bodies" t-as="body">
+                    <t 
+                        t-set="main_class" 
+                        t-value="
+                            body['class_name'] +
+                            ' w-100 ' +
+                            body['padding_x'] + 
+                            body['padding_y'] +
+                            body['margin_top'] +
+                            body['margin_bottom']"
+                    />
+                    <t
+                        t-set="style"
+                        t-value="'text-align: ' + body['text_align'] + '; '
+                                'font-size: ' + body['font_size'] + 'px;'"
+                    />
+                    <!-- ===== DBEUG ==== -->
+                        <!-- <span 
+                        t-out="style"
+                        /><br/> -->
+                    <!-- ===== DBEUG ==== -->
+                    <!-- t-if="body['body_type'] in ['text', 'listed','unlisted']" -->
+                    <div t-att-class="main_class" t-att-style="style">
+                        <!-- ========== TEXT ========== -->
+                        <h1 t-out="body['body']" t-if="body['body_type'] == 'text' and body['text_type'] == 'h1'"/>
+                        <h2 t-out="body['body']" t-if="body['body_type'] == 'text' and body['text_type'] == 'h2'"/>
+                        <h3 t-out="body['body']" t-if="body['body_type'] == 'text' and body['text_type'] == 'h3'"/>
+                        <span t-out="body['body']" t-if="body['body_type'] == 'text' and body['text_type'] == 'normal'"/>
+                        <span t-out="body['body_type'] in ['listed', 'unlisted', 'table'] and body['body']"/>
+                        <!-- ========== TEXT ========== -->
+
+                        <!-- ========== LIST ========== -->
+                        <ol t-if="body['body_type'] == 'listed'">
+                            <li 
+                            style="line-height: 1.2;" 
+                            t-foreach="body['list_ids']" 
+                            t-as="item"
+                            t-out="item.body"/>
+                        </ol>
+                        <ul t-if="body['body_type'] == 'unlisted'">
+                            <li 
+                            style="line-height: 1.2;" 
+                            t-foreach="body['list_ids']" 
+                            t-as="item"
+                            t-out="item.body"/>
+                        </ul>
+                        <!-- ========== LIST ========== -->
+                        
+                        <!-- ========== TABLE ========== -->
+                        <table t-if="body['body_type'] == 'table'"
+                            style="width:80%; border-collapse:collapse; border:1px solid #fff;">
+                            <tbody>
+                                <t t-foreach="body['table_ids']" t-as="tbl">
+                                    <tr>
+                                        <td style="border:1px solid #fff; padding:4px 6px; white-space:nowrap;">
+                                            <t t-out="tbl.label"/>
+                                        </td>
+                                        <td style="border:1px solid #fff; padding:4px 6px; width:10px; text-align:center;">
+                                            :
+                                        </td>
+                                        <td style="border:1px solid #fff; padding:4px 6px;">
+                                            <t t-out="self.parse_table_value(tbl.value, offer)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <!-- ========== TABLE ========== -->
+                        
+                        <!-- ========== SIGN ========== -->
+                        <t t-if="body['body_type'] == 'sign'">
+                            <table style="width: 100%; border:0; margin-top: 40px;">
+                                <tr>
+                                    <td style="width: 50%; text-align: center;">
+                                        <p style="margin-bottom: 20px;"><strong>Employer</strong></p>
+                                        <img style="width: 160px; max-height: 100px; object-fit: contain;" t-if="body['employer_signature']" t-attf-src="data:image/png;base64,{{ body['employer_signature'] }}"/>
+                                        <div t-else="" style="width: 160px; height: 100px; margin: 0 auto;"></div>
+                                    </td>
+                                    <td style="width: 50%; text-align: center;">
+                                        <p style="margin-bottom: 20px;"><strong>Candidate</strong></p>
+                                        <img style="width: 160px; max-height: 100px; object-fit: contain;" t-if="body['candidate_signature']" t-attf-src="data:image/png;base64,{{ body['candidate_signature'] }}"/>
+                                        <img style="width: 160px; max-height: 100px; object-fit: contain;" t-else="" src="fazri_custom/static/src/img/signature_placeholder.png"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </t>
+                        <!-- ========== SIGN ========== -->
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <record id="paperformat_contract_base_template" model="report.paperformat">
+        <field name="name">Contract Base Template</field>
+        <field name="default" eval="False"/>
+        <field name="disable_shrinking" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">20</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="dpi">80</field>
+    </record>
+
+    <record id="action_contract_base_template" model="ir.actions.report">
+        <field name="name">Contract Template</field>
+        <field name="model">salary.offer</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">fazri_custom.contract_base_template</field>
+        <field name="report_file">fazri_custom.contract_base_template</field>
+        <field name="print_report_name">'Contract'</field>
+        <field name="paperformat_id" ref="fazri_custom.paperformat_contract_base_template"/>
+        <field name="binding_model_id" ref="fazri_custom.model_hr_contract_template"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

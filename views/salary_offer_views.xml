@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="salary_offer_tree_view" model="ir.ui.view">
+        <field name="name">salary.offer.tree.view</field>
+        <field name="model">salary.offer</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="department_id"/>
+                <field name="state" 
+                    widget="badge" 
+                    decoration-danger="state in ['cancel', 'rejected']"
+                    decoration-success="state == 'accepted'"
+                    decoration-info="state in ['draft', 'proposed']"
+                />
+            </tree>
+        </field>
+    </record>
+
+    <record id="salary_offer_form_view" model="ir.ui.view">
+        <field name="name">salary.offer.form.view</field>
+        <field name="model">salary.offer</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="send_offer" type="object" class="btn-primary" string="Send Offer"
+                        invisible="state in ['cancel', 'accepted', 'rejected', 'proposed']"/>
+                    <button name="set_to_draft" type="object" class="btn-secondary" string="Set to Draft"
+                    invisible="state != 'cancel'"/>
+                    <button name="preview_template" type="object" class="btn-secondary" string="Preview Template" invisible="state != 'draft'"/>
+                    <button name="action_cancel" type="object" class="btn-secondary" string="Cancel" 
+                        confirm="Are you sure want to cancel this offer?" invisible="state in ['cancel', 'accepted', 'rejected']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,proposed"/>
+                </header>
+                <sheet>
+                    <field name="is_reject" invisible="1"/>
+                    <field name="is_accepted" invisible="1"/>
+                    <div class="oe_title pe-0">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1 class="d-flex justify-content-between align-items-center">
+                            <field name="name" options="{'line_breaks': False}" widget="text" placeholder="Candidate Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="template_id" readonly="state != 'draft'"/>
+                            <label for="contract_start" string="Contract Period"/>
+                            <div name="div_contract_period" class="o_row">
+                                <field name="contract_start" nolabel="1" required="1" placeholder="Contract Start Date" readonly="state != 'draft'"/>
+                                <i class="fa fa-arrow-right"/>
+                                <field name="contract_end" nolabel="1" required="1" placeholder="Contract End Date" readonly="state != 'draft'"/>
+                            </div>
+                            <field name="applicant_id" context="{'show_name': True}" readonly="1" options="{'no_open': True}"/>
+                            <field name="department_id" readonly="1" options="{'no_open': True}"/>
+                            <field name="email_address" readonly="1"/>
+                            <field name="phone_number" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="company_id" readonly="1" options="{'no_open': True}"/>
+                            <field name="contract_type" readonly="state != 'draft'"/>
+                            <!-- <field name="bank_id" invisible="state != 'accepted'"/>
+                            <field name="bank_number" invisible="state != 'accepted'"/> -->
+                            <field name="currency_id" readonly="1" invisible="1"/>
+                            <field name="salary_offer" readonly="state not in  ['draft', 'reject']"/>
+                        </group>
+                        <notebook>
+                            <page name="Reject Reason" invisible="not is_reject">
+                                <field name="reject_reason" readonly="1"/>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" options="{'open_attachments': True}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_salary_offer" model="ir.actions.act_window">
+        <field name="name">Salary Offer</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">salary.offer</field>
+        <field name="view_id" ref='fazri_custom.salary_offer_tree_view'/>
+    </record>
+
+    <menuitem 
+        id="manu_salary_offer"
+        name="Salary Offer"
+        parent="hr_recruitment.menu_crm_case_categ0_act_job"
+        sequence="10"
+        action="fazri_custom.action_salary_offer"
+    />
+
+</odoo>

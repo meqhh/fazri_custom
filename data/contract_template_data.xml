@@ -1,0 +1,418 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data noupdate="0">
+        <!-- Main Template -->
+        <record id="hr_contract_default_template" model="hr.contract.template">
+            <field name="name">Default Employment Contract</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 1. JUDUL -->
+        <record id="hr_contract_def_title" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">10</field>
+            <field name="body_type">text</field>
+            <field name="text_type">h2</field>
+            <field name="text_align">center</field>
+            <field name="body">SURAT PERJANJIAN KONTRAK KERJA</field>
+            <field name="margin_bottom">2</field>
+        </record>
+
+        <!-- 1b. NOMOR SURAT & INTRO -->
+        <record id="hr_contract_def_intro" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">15</field>
+            <field name="body_type">text</field>
+            <field name="text_type">normal</field>
+            <field name="text_align">justify</field>
+            <field name="body">Pada hari ini, kedua belah pihak yang tercantum di bawah ini sepakat untuk mengikatkan diri dalam suatu perjanjian kerja dengan syarat dan ketentuan sebagai berikut:</field>
+            <field name="margin_bottom">4</field>
+        </record>
+
+        <!-- 2. IDENTITAS PIHAK PERTAMA -->
+        <record id="hr_contract_def_p1_title" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">20</field>
+            <field name="body_type">text</field>
+            <field name="text_type">normal</field>
+            <field name="text_align">justify</field>
+            <field name="body">Yang bertanda tangan di bawah ini:</field>
+            <field name="margin_bottom">2</field>
+        </record>
+
+        <record id="hr_contract_def_p1_table" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">25</field>
+            <field name="body_type">table</field>
+            <field name="margin_bottom">4</field>
+        </record>
+
+        <record id="hr_contract_def_p1_t1" model="hr.contract.template.table">
+            <field name="line_id" ref="hr_contract_def_p1_table"/>
+            <field name="sequence">1</field>
+            <field name="label">Nama Perusahaan</field>
+            <field name="value">{{ offer.company_id.name }}</field>
+        </record>
+        
+        <record id="hr_contract_def_p1_t2" model="hr.contract.template.table">
+            <field name="line_id" ref="hr_contract_def_p1_table"/>
+            <field name="sequence">2</field>
+            <field name="label">Alamat</field>
+            <field name="value">{{ offer.company_id.street }}</field>
+        </record>
+
+        <record id="hr_contract_def_p1_desc" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">30</field>
+            <field name="body_type">text</field>
+            <field name="text_type">normal</field>
+            <field name="text_align">justify</field>
+            <field name="body">Dalam hal ini bertindak untuk dan atas nama perusahaan, yang selanjutnya disebut sebagai PIHAK PERTAMA.</field>
+            <field name="margin_bottom">4</field>
+        </record>
+
+        <!-- 3. IDENTITAS PIHAK KEDUA -->
+        <record id="hr_contract_def_p2_table" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">40</field>
+            <field name="body_type">table</field>
+            <field name="margin_bottom">4</field>
+        </record>
+
+        <record id="hr_contract_def_p2_t1" model="hr.contract.template.table">
+            <field name="line_id" ref="hr_contract_def_p2_table"/>
+            <field name="sequence">1</field>
+            <field name="label">Nama</field>
+            <field name="value">{{ applicant.partner_name }}</field>
+        </record>
+
+        <record id="hr_contract_def_p2_t2" model="hr.contract.template.table">
+            <field name="line_id" ref="hr_contract_def_p2_table"/>
+            <field name="sequence">2</field>
+            <field name="label">Alamat</field>
+            <field name="value">{{ applicant.partner_id.street }}</field>
+        </record>
+
+        <record id="hr_contract_def_p2_t3" model="hr.contract.template.table">
+            <field name="line_id" ref="hr_contract_def_p2_table"/>
+            <field name="sequence">3</field>
+            <field name="label">No. Telepon</field>
+            <field name="value">{{ offer.phone_number }}</field>
+        </record>
+
+        <record id="hr_contract_def_p2_desc" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">50</field>
+            <field name="body_type">text</field>
+            <field name="text_type">normal</field>
+            <field name="text_align">justify</field>
+            <field name="body">Dalam hal ini bertindak untuk dan atas nama diri sendiri, yang selanjutnya disebut sebagai PIHAK KEDUA.</field>
+            <field name="margin_bottom">4</field>
+        </record>
+
+        <!-- PENGANTAR PASAL -->
+        <record id="hr_contract_def_pasal_intro" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">55</field>
+            <field name="body_type">text</field>
+            <field name="text_type">normal</field>
+            <field name="text_align">justify</field>
+            <field name="body">Kedua belah pihak telah sepakat untuk mengadakan perjanjian kontrak kerja dengan ketentuan dan syarat-syarat sebagai berikut:</field>
+            <field name="margin_bottom">4</field>
+        </record>
+
+        <!-- 4. PASAL 1 – RUANG LINGKUP PEKERJAAN -->
+        <record id="hr_contract_def_pasal_1_title" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">60</field>
+            <field name="body_type">text</field>
+            <field name="text_type">h3</field>
+            <field name="text_align">left</field>
+            <field name="body">PASAL 1 - RUANG LINGKUP PEKERJAAN</field>
+            <field name="margin_bottom">2</field>
+        </record>
+        
+        <record id="hr_contract_def_pasal_1_desc" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">65</field>
+            <field name="body_type">text</field>
+            <field name="text_type">normal</field>
+            <field name="text_align">justify</field>
+            <field name="body">PIHAK PERTAMA menyatakan menerima PIHAK KEDUA sebagai karyawan dengan status kontrak. Hubungan kerja ini berlaku mulai tanggal {{ offer.contract_start }} hingga {{ offer.contract_end }}. Adapun ketentuan pekerjaan adalah sebagai berikut:</field>
+            <field name="margin_bottom">2</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_1_list" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">67</field>
+            <field name="body_type">listed</field>
+            <field name="margin_bottom">4</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_1_l1" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_1_list"/>
+            <field name="sequence">1</field>
+            <field name="body">PIHAK KEDUA ditempatkan pada departemen {{ offer.department_id.name }} sesuai dengan kebutuhan operasional perusahaan.</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_1_l2" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_1_list"/>
+            <field name="sequence">2</field>
+            <field name="body">PIHAK KEDUA wajib melaksanakan tugas dan tanggung jawab sesuai dengan posisi yang ditetapkan serta mengikuti arahan dari atasan langsung.</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_1_l3" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_1_list"/>
+            <field name="sequence">3</field>
+            <field name="body">PIHAK PERTAMA berhak melakukan perubahan penempatan kerja apabila diperlukan demi kepentingan operasional perusahaan dengan pemberitahuan terlebih dahulu kepada PIHAK KEDUA.</field>
+        </record>
+
+        <!-- 5. PASAL 2 – KEWAJIBAN DAN PERATURAN -->
+        <record id="hr_contract_def_pasal_2_title" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">70</field>
+            <field name="body_type">text</field>
+            <field name="text_type">h3</field>
+            <field name="text_align">left</field>
+            <field name="body">PASAL 2 - KEWAJIBAN DAN PERATURAN</field>
+            <field name="margin_bottom">2</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_2_desc" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">75</field>
+            <field name="body_type">text</field>
+            <field name="text_type">normal</field>
+            <field name="text_align">justify</field>
+            <field name="body">PIHAK KEDUA wajib mematuhi seluruh peraturan perusahaan yang berlaku, termasuk namun tidak terbatas pada hal-hal berikut:</field>
+            <field name="margin_bottom">2</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_2_list" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">77</field>
+            <field name="body_type">listed</field>
+            <field name="margin_bottom">4</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_2_l1" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_2_list"/>
+            <field name="sequence">1</field>
+            <field name="body">Mematuhi seluruh peraturan, tata tertib, dan prosedur kerja yang ditetapkan oleh perusahaan.</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_2_l2" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_2_list"/>
+            <field name="sequence">2</field>
+            <field name="body">Menjaga kerahasiaan seluruh informasi perusahaan, baik selama maupun setelah masa kerja berakhir.</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_2_l3" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_2_list"/>
+            <field name="sequence">3</field>
+            <field name="body">Menjaga nama baik dan reputasi perusahaan di dalam maupun di luar lingkungan kerja.</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_2_l4" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_2_list"/>
+            <field name="sequence">4</field>
+            <field name="body">Hadir tepat waktu sesuai dengan jadwal kerja yang telah ditentukan.</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_2_l5" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_2_list"/>
+            <field name="sequence">5</field>
+            <field name="body">Menyelesaikan setiap tugas dan tanggung jawab yang diberikan dengan penuh dedikasi dan profesionalisme.</field>
+        </record>
+
+        <!-- 6. PASAL 3 – JAM KERJA -->
+        <record id="hr_contract_def_pasal_3_title" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">80</field>
+            <field name="body_type">text</field>
+            <field name="text_type">h3</field>
+            <field name="text_align">left</field>
+            <field name="body">PASAL 3 - JAM KERJA</field>
+            <field name="margin_bottom">2</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_3_desc" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">85</field>
+            <field name="body_type">text</field>
+            <field name="text_type">normal</field>
+            <field name="text_align">justify</field>
+            <field name="body">Hari kerja dan jam kerja diatur mengikuti ketentuan operasional perusahaan dengan rincian sebagai berikut:</field>
+            <field name="margin_bottom">2</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_3_list" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">87</field>
+            <field name="body_type">listed</field>
+            <field name="margin_bottom">4</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_3_l1" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_3_list"/>
+            <field name="sequence">1</field>
+            <field name="body">Hari kerja adalah 5 (lima) hari dalam seminggu, yaitu hari Senin sampai dengan Jumat.</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_3_l2" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_3_list"/>
+            <field name="sequence">2</field>
+            <field name="body">Jam kerja dimulai pukul 08:00 sampai dengan pukul 17:00 waktu setempat.</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_3_l3" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_3_list"/>
+            <field name="sequence">3</field>
+            <field name="body">Waktu istirahat selama 1 (satu) jam yang diatur sesuai kebijakan masing-masing departemen.</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_3_l4" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_3_list"/>
+            <field name="sequence">4</field>
+            <field name="body">Kerja lembur dapat dilakukan sesuai dengan kebutuhan perusahaan dan akan dihitung berdasarkan ketentuan peraturan perundang-undangan yang berlaku.</field>
+        </record>
+
+        <!-- 7. PASAL 4 – GAJI DAN PEMBAYARAN -->
+        <record id="hr_contract_def_pasal_4_title" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">90</field>
+            <field name="body_type">text</field>
+            <field name="text_type">h3</field>
+            <field name="text_align">left</field>
+            <field name="body">PASAL 4 - GAJI DAN PEMBAYARAN</field>
+            <field name="margin_bottom">2</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_4_desc" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">95</field>
+            <field name="body_type">text</field>
+            <field name="text_type">normal</field>
+            <field name="text_align">justify</field>
+            <field name="body">PIHAK PERTAMA sepakat untuk memberikan gaji pokok bulanan kepada PIHAK KEDUA sebesar {{ offer.salary_offer }}. Ketentuan pembayaran diatur sebagai berikut:</field>
+            <field name="margin_bottom">2</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_4_list" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">97</field>
+            <field name="body_type">listed</field>
+            <field name="margin_bottom">4</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_4_l1" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_4_list"/>
+            <field name="sequence">1</field>
+            <field name="body">Gaji akan dibayarkan setiap akhir bulan melalui transfer ke rekening bank yang telah didaftarkan oleh PIHAK KEDUA.</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_4_l2" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_4_list"/>
+            <field name="sequence">2</field>
+            <field name="body">Pemotongan pajak penghasilan (PPh 21) dan iuran lainnya akan dilakukan sesuai dengan ketentuan peraturan perundang-undangan yang berlaku.</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_4_l3" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_4_list"/>
+            <field name="sequence">3</field>
+            <field name="body">Tunjangan dan fasilitas tambahan lainnya akan diberikan sesuai dengan kebijakan perusahaan yang berlaku.</field>
+        </record>
+
+        <!-- 8. PASAL 5 – PEMUTUSAN HUBUNGAN KERJA (BARU) -->
+        <record id="hr_contract_def_pasal_5_title" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">100</field>
+            <field name="body_type">text</field>
+            <field name="text_type">h3</field>
+            <field name="text_align">left</field>
+            <field name="body">PASAL 5 - PEMUTUSAN HUBUNGAN KERJA</field>
+            <field name="margin_bottom">2</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_5_desc" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">105</field>
+            <field name="body_type">text</field>
+            <field name="text_type">normal</field>
+            <field name="text_align">justify</field>
+            <field name="body">Pemutusan hubungan kerja dapat terjadi berdasarkan ketentuan-ketentuan berikut:</field>
+            <field name="margin_bottom">2</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_5_list" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">107</field>
+            <field name="body_type">listed</field>
+            <field name="margin_bottom">4</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_5_l1" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_5_list"/>
+            <field name="sequence">1</field>
+            <field name="body">Kontrak kerja berakhir secara otomatis pada tanggal berakhirnya masa kontrak yang telah disepakati.</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_5_l2" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_5_list"/>
+            <field name="sequence">2</field>
+            <field name="body">Salah satu pihak dapat mengakhiri perjanjian ini sebelum masa kontrak berakhir dengan memberikan pemberitahuan tertulis sekurang-kurangnya 30 (tiga puluh) hari sebelumnya.</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_5_l3" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_5_list"/>
+            <field name="sequence">3</field>
+            <field name="body">PIHAK PERTAMA berhak memutuskan hubungan kerja secara sepihak tanpa pemberitahuan terlebih dahulu apabila PIHAK KEDUA melakukan pelanggaran berat terhadap peraturan perusahaan atau hukum yang berlaku.</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_5_l4" model="hr.contract.template.list">
+            <field name="line_id" ref="hr_contract_def_pasal_5_list"/>
+            <field name="sequence">4</field>
+            <field name="body">Pada saat berakhirnya hubungan kerja, PIHAK KEDUA wajib mengembalikan seluruh aset dan dokumen milik perusahaan yang berada dalam penguasaannya.</field>
+        </record>
+
+        <!-- 9. PASAL 6 – PENYELESAIAN PERSELISIHAN (BARU) -->
+        <record id="hr_contract_def_pasal_6_title" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">110</field>
+            <field name="body_type">text</field>
+            <field name="text_type">h3</field>
+            <field name="text_align">left</field>
+            <field name="body">PASAL 6 - PENYELESAIAN PERSELISIHAN</field>
+            <field name="margin_bottom">2</field>
+        </record>
+
+        <record id="hr_contract_def_pasal_6_desc" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">115</field>
+            <field name="body_type">text</field>
+            <field name="text_type">normal</field>
+            <field name="text_align">justify</field>
+            <field name="body">Apabila terjadi perselisihan antara PIHAK PERTAMA dan PIHAK KEDUA sehubungan dengan pelaksanaan perjanjian ini, maka kedua belah pihak sepakat untuk menyelesaikannya secara musyawarah untuk mencapai mufakat. Apabila musyawarah tidak menghasilkan kesepakatan, maka penyelesaian akan dilakukan melalui prosedur sesuai dengan ketentuan peraturan perundang-undangan ketenagakerjaan yang berlaku.</field>
+            <field name="margin_bottom">4</field>
+        </record>
+
+        <!-- 10. PENUTUP -->
+        <record id="hr_contract_def_penutup" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">120</field>
+            <field name="body_type">text</field>
+            <field name="text_type">normal</field>
+            <field name="text_align">justify</field>
+            <field name="body">Demikian perjanjian ini dibuat dan ditandatangani oleh kedua belah pihak dalam keadaan sadar, sehat jasmani dan rohani, serta tanpa adanya paksaan dari pihak mana pun. Perjanjian ini dibuat dalam rangkap 2 (dua) yang masing-masing memiliki kekuatan hukum yang sama, dan berlaku efektif sejak tanggal ditandatanganinya surat perjanjian ini.</field>
+            <field name="margin_bottom">6</field>
+        </record>
+
+        <!-- 11. TANDA TANGAN -->
+        <record id="hr_contract_def_sign" model="hr.contract.template.line">
+            <field name="template_id" ref="hr_contract_default_template"/>
+            <field name="sequence">130</field>
+            <field name="body_type">sign</field>
+        </record>
+
+    </data>
+</odoo>

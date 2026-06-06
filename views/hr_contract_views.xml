@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="hr_contract_view_form_inherit" model="ir.ui.view">
+        <field name="name">Contract Form - inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_start']" position="replace">
+                <label for="date_start" string="Contract Period"/>
+                <div name="div_contract_period" class="o_row">
+                    <field name="date_start" nolabel="1" required="1" placeholder="Contract Start Date"/>
+                    <i class="fa fa-arrow-right"/>
+                    <field name="date_end" nolabel="1" placeholder="Contract End Date"/>
+                </div>
+            </xpath>
+            <xpath expr="(//field[@name='date_end'])[2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="(//field[@name='structure_type_id'])[1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="(//field[@name='structure_type_id'])[2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="(//field[@name='job_id'])[1]" position="attributes">
+                <attribute name="string">Position</attribute>
+            </xpath>
+            <xpath expr="(//field[@name='job_id'])[2]" position="attributes">
+                <attribute name="string">Position</attribute>
+            </xpath>
+            <xpath expr="//page[@name='other']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='information']" position="before">
+                <page string="Contract">
+                    <div class="o_form_sheet">
+                        <field name="contract_pdf" widget="pdf_viewer" readonly="1" nolabel="1"/>
+                    </div>
+                </page>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button type="object" name="verify_contract" string="Verify Contract" class="btn-primary" invisible="is_verified"/>
+                <button type="object" name="action_employer_sign" string="Employer Sign" class="btn-primary"
+                    invisible="not is_verified or is_employer_signed"/>
+                <field name="is_verified" invisible="1"/>
+                <field name="is_employer_signed" invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@name='information']" position="before">
+                <page string="Employer Signature" invisible="not is_employer_signed">
+                    <group>
+                        <field name="employer_signature" widget="image" string="Employer Signature" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record> 
+    
+    <record model="ir.actions.act_window" id="hr_contract.action_hr_contract">
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

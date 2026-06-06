@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="resend_offer_wizard_form_view" model="ir.ui.view">
+        <field name="name">resend.offer.wizard.form.view</field>
+        <field name="model">resend.offer.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title pe-0">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1 class="d-flex justify-content-between align-items-center">
+                            <field name="name" options="{'line_breaks': False}" widget="text" placeholder="Candidate Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="template_id" readonly="state != 'draft'"/>
+                            <field name="applicant_id" context="{'show_name': True}" readonly="1" options="{'no_open': True}"/>
+                            <field name="department_id" readonly="1" options="{'no_open': True}"/>
+                            <field name="email_address" readonly="1"/>
+                            <field name="phone_number" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="company_id" readonly="1" options="{'no_open': True}"/>
+                            <field name="contract_type" readonly="state != 'draft'"/>
+                            <field name="bank_id" invisible="state != 'accepted'"/>
+                            <field name="bank_number" invisible="state != 'accepted'"/>
+                            <field name="salary_offer" readonly="state not in  ['draft', 'reject']"/>
+                            <!-- <field name="salary_tax" readonly="state not in  ['draft', 'reject']"/>
+                            <field name="salary_total"/> -->
+                        </group>
+                        <notebook>
+                            <page name="Reject Reason" invisible="not is_reject">
+                                <field name="reject_reason" readonly="1"/>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" options="{'open_attachments': True}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+</odoo>

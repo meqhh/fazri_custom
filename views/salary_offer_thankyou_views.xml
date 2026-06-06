@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="salary_offer_thankyou_template" name="Salary Offer Thank You">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+
+            <div class="container-sm mt-5">
+                <div class="d-flex justify-content-center">
+                    <div class="card shadow-sm p-4 text-center" style="max-width:600px; width:100%;">
+                        <h3 class="mb-3">
+                            Thank You <t t-if="name" t-out="name"/>
+                        </h3>
+
+                        <p class="mb-2">
+                            Your response has been successfully submitted.
+                        </p>
+
+                        <t t-if="state == 'accepted'">
+                            <p class="mb-2">
+                                You have accepted the salary offer.
+                            </p>
+                            <p>
+                                Our HR team will contact you for the next process.
+                            </p>
+                        </t>
+
+                        <t t-if="state == 'rejected'">
+                            <p class="mb-2">
+                                You have declined the salary offer.
+                            </p>
+                            <p>
+                                Thank you for your time and consideration.
+                            </p>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="hr_religion_tree_views" model="ir.ui.view">
+        <field name="name">hr.religion.tree.views</field>
+        <field name="model">hr.religion</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_religion_action" model="ir.actions.act_window">
+        <field name="name">Religion</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.religion</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem 
+        id="hr_religion_menuitem"
+        name="Religion"
+        action="hr_religion_action"
+        parent="hr.menu_config_employee"
+        sequence="5"
+    />
+</odoo>

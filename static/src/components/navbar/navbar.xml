@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<templates>
+    <t t-name="fazri_custom.NavBar" t-inherit="web.NavBar" t-inherit-mode="extension">
+        <xpath expr="//div[@t-on-click='onClickMenu']" position="attributes">
+            <attribute name="data-hotkey">h</attribute>
+        </xpath>
+    </t>
+</templates>

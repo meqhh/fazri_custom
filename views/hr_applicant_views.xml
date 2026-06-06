@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="hr_applicant_view_form_inherit" model="ir.ui.view">
+        <field name="name">Jobs - Recruitment Form - inherit</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="before">
+                <field name="offer_id" invisible="1"/>
+                <field name="offer_count" invisible="1"/>
+            </xpath>
+            <xpath expr="//header/button[@name='create_employee_from_applicant']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='emp_is_active']" position="after">
+                <field name="is_proposal" invisible="1"/>
+            </xpath>
+            <xpath expr="//header/button[@name='create_employee_from_applicant']" position="after">
+                <button string="Create Offer" name="create_offer" type="object" invisible="not is_proposal or offer_id" class="btn-primary"/>
+                <button string="Send Appointment" name="action_send_whatsapp" type="object" icon="fa-whatsapp" class="btn-primary" invisible="not partner_phone or is_proposal or application_status == 'refused'"/>
+                <!-- <widget name="attach_document" string="Attach Resume" action="attach_document" invisible="is_proposal or application_status == 'refused'"/> -->
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_offers"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-file-text"
+                        invisible="offer_count == 0">
+                    <field name="offer_count"
+                        widget="statinfo"
+                        string="Offers"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='email_cc']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_phone']" position="attributes">
+                <attribute name="string">Phone Number</attribute>
+            </xpath>
+            <xpath expr="//field[@name='linkedin_profile']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='medium_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='availability']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='categ_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='source_id']" position="after">
+                <!-- <field name="manager_id" options="{'no_create': True, 'no_open': True}" invisible="1"/> -->
+                <field name="currency_id" invisible="1"/>
+                <field name="salary_expected" widget="monetary"/>
+            </xpath>
+            <xpath expr="(//sheet/group/group)[3]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="(//sheet/group/group)[4]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='description']" position="before">
+                <div class="alert alert-light border mb-3" role="alert">
+                    <strong>
+                        <i class="fa fa-file-text-o me-1"/>
+                        Cover Letter / Summary
+                    </strong>
+                    <field
+                        name="cover_letter"
+                        nolabel="1"
+                        widget="text"
+                        readonly="1"
+                        class="mt-2"
+                        placeholder="No cover letter has been submitted by this candidate."
+                    />
+                </div>
+                <separator string="Interview Summary (HR Only)"/>
+            </xpath>
+
+            <xpath expr="//page[@name='application_summary']" position="attributes">
+                <attribute name="string">Inverview Summary</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_mobile']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_name']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='email_from']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_phone']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <!-- <xpath expr="//field[@name='description']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath> -->
+            <xpath expr="//field[@name='interviewer_ids']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+        </field>
+    </record> 
+
+    <record id="hr_kanban_view_applicant_inherit" model="ir.ui.view">
+        <field name="name">Jobs - Recruitment Kanban - inherit</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_kanban_view_applicant"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="replace">
+                <templates>
+                    <t t-name="kanban-menu">
+                        <a role="menuitem" name="action_makeMeeting" type="object" class="dropdown-item">Schedule Interview</a>
+                        <a role="menuitem" name="archive_applicant" type="object" class="dropdown-item">Refuse</a>
+                        <a role="menuitem" name="archive_applicant" type="object" class="dropdown-item">Archive</a>
+                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                        <div role="separator" class="dropdown-divider"/>
+                        <ul class="oe_kanban_colorpicker text-center" data-field="color"/>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
+                            <field name="date_closed" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <div class="ribbon ribbon-top-right" invisible="not date_closed">
+                                <span class="text-bg-success">Hired</span>
+                            </div>
+                            <span class="badge rounded-pill text-bg-danger float-end me-4" invisible="application_status != 'refused'">Refused</span>
+                            <span class="badge rounded-pill text-bg-secondary float-end me-4" invisible="application_status != 'archived'">Archived</span>
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <b class="o_kanban_record_title mt8" t-if="record.partner_name.raw_value">
+                                            <field name="partner_name"/><br/>
+                                        </b><t t-else="1">
+                                            <i class="o_kanban_record_title"><field name="name"/></i><br/>
+                                        </t>
+                                        <div class="o_kanban_record_subtitle" invisible="context.get('search_default_job_id', False)">
+                                            <field name="job_id"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4" role="img" aria-label="Mobile" title="Mobile"/><field name="partner_mobile" widget="phone"/><br/></t>
+                                <field name="applicant_properties" widget="properties"/>
+                                <div class="o_kanban_record_bottom mt4">
+                                    <div class="oe_kanban_bottom_left">
+                                        <div class="float-start mr4" groups="base.group_user">
+                                        </div>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="kanban_state" widget="state_selection"/>
+                                        <field name="priority" widget="priority"/>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="clearfix"/>
+                        </div>
+                    </t>
+                </templates>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_recruitment_skills.hr_applicant_view_form" model="ir.ui.view">
+        <field name="active" eval="False"/>
+    </record>
+
+    <record model="ir.actions.act_window" id="hr_recruitment.action_hr_job_applications">
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+</odoo>

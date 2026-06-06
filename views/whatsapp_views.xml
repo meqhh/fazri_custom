@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="whatsapp_conf_tree_view" model="ir.ui.view">
+        <field name="name">whatsapp.conf.tree.view</field>
+        <field name="model">whatsapp.conf</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="url"/>
+                <field name="access_token"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_whatsapp_conf" model="ir.actions.act_window">
+        <field name="name">whatsapp Conf</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">whatsapp.conf</field>
+        <field name="view_id" ref='fazri_custom.whatsapp_conf_tree_view'/>
+    </record>
+
+    <menuitem 
+        id="manu_whatsapp_conf"
+        name="Whatsapp Conf"
+        parent="base.menu_administration"
+        sequence="11"
+        action="fazri_custom.action_whatsapp_conf"
+    />
+</odoo>

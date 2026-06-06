@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <template id="employer_sign_template" name="Employer Sign Form">
+        <t t-call="web.frontend_layout">
+            <script src="https://cdn.jsdelivr.net/npm/signature_pad@5.0.10/dist/signature_pad.umd.min.js"/>
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+
+            <div class="container-sm mt-5 employer-sign-page">
+                <div class="d-flex justify-content-center mb-3 text-center column">
+                    <h3>Please review and provide your signature as the Employer</h3>
+                </div>
+                
+                <div class="container pb-5">
+                    <form>
+                        <section>
+                            <div class="form-group mb-3">
+                                <label style="font-weight:bold;">Contract Document</label>
+                                <t t-if="contract.contract_pdf">
+                                    <!-- <div class="mb-2">
+                                        <a t-att-href="'/web/content/%s/%s/contract_pdf?download=false' % (contract._name, contract.id)" target="_blank" class="btn btn-outline-primary">
+                                            View Contract Document
+                                        </a>
+                                    </div> -->
+                                    <iframe style="width:100%; height:800px; border:1px solid #ccc; border-radius:4px;"
+                                        t-att-src="'/web/content/%s/%s/contract_pdf?download=false' % (contract._name, contract.id)"
+                                        allowfullscreen="1">
+                                    </iframe>
+                                </t>
+                                <t t-else="">
+                                    <div class="alert alert-warning">No contract document found.</div>
+                                </t>
+                            </div>
+
+                            <div class="form-group mb-3 mt-4">
+                                <label for="signature" style="font-weight:bold;">Employer Signature</label>
+                                <div id="signature-pad" class="signature-pad" style="width:100%; max-width:500px;">
+                                    <canvas id="employer-signature-canvas" style="width:100%; max-width:300px; max-height:150px; border:1px solid #000; border-radius:4px;" class="bg-light"></canvas>
+                                </div>
+                                <small id="employer-sign-error" class="error-msg mx-1 d-none" style="color:red;"></small>
+                                <input type="hidden" id="employer-signature-data" name="signature" />
+                                <button type="button" id="employer-sign-clear" class="btn btn-secondary mt-2 d-none">Clear Signature</button>
+                            </div>
+                        </section>
+                        
+                        <footer class="mt-4">
+                            <button
+                                type="button"
+                                id="employer-sign-submit"
+                                class="btn btn-success"
+                                name="submit"
+                            >
+                                Submit Signature
+                            </button>
+                        </footer>
+
+                        <!-- Token hidden -->
+                        <input type="hidden" id="employer-sign-token" t-att-value="token"/>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="employer_sign_done_template" name="Employer Sign Done">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+
+            <div class="container py-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-8">
+                        <div class="card shadow-sm text-center p-4">
+
+                            <t t-if="already_signed">
+                                <h3 class="mb-2">Contract Already Signed</h3>
+                                <p class="text-muted">
+                                    This contract has already been signed by the employer.
+                                </p>
+                            </t>
+
+                            <t t-else="">
+                                <div class="mb-3">
+                                    <i class="fa fa-check-circle fa-3x text-success"/>
+                                </div>
+
+                                <h3 class="mb-2">Signature Submitted</h3>
+                                <p class="text-muted">
+                                    The employer signature has been recorded successfully.
+                                </p>
+                            </t>
+
+                            <div class="mt-4">
+                                <button class="btn btn-primary"
+                                        onclick="window.close()">
+                                    Close Window
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </t>
+    </template>
+
+</odoo>

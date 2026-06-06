@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data noupdate="1">
+        <record id="religion_islam" model="hr.religion">
+            <field name="name">Islam</field>
+        </record>
+
+        <record id="religion_kristen_protestan" model="hr.religion">
+            <field name="name">Kristen Protestan</field>
+        </record>
+
+        <record id="religion_katolik" model="hr.religion">
+            <field name="name">Katolik</field>
+        </record>
+
+        <record id="religion_hindu" model="hr.religion">
+            <field name="name">Hindu</field>
+        </record>
+
+        <record id="religion_buddha" model="hr.religion">
+            <field name="name">Buddha</field>
+        </record>
+
+        <record id="religion_konghucu" model="hr.religion">
+            <field name="name">Konghucu</field>
+        </record>
+
+        <record id="religion_other" model="hr.religion">
+            <field name="name">Other</field>
+        </record>
+    </data>
+</odoo>

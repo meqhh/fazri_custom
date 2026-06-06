@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="view_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form.view.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name='inherit_id' ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//widget[@name='hr_employee_chat']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='category_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='mobile_phone']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='coach_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='work_phone']" position="attributes">
+                <attribute name="string">Mobile No.</attribute>
+            </xpath>
+            <xpath expr="//field[@name='work_email']" position="after">
+                <field name="private_email"/>
+                <field name="identification_id" string="No Identity"/>
+            </xpath>
+            <xpath expr="//field[@name='private_email']" position="attributes">
+                <attribute name="string">Personal Email</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='public']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='hr_settings']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='private_street2']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="employee_number"/>
+                <field name="join_date"/>
+                <field name="parent_id"/>
+                <field name="signature" widget="image"/>
+            </xpath>
+            <xpath expr="//label[@for='private_street']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='personal_information']" position="replace">
+                <page name="personal_information" string="Private Information" groups="hr.group_hr_user">
+                    <group>
+                        <group>
+                            <field name="private_street"/>
+                            <field name="birthday"/>
+                            <field name="place_of_birth"/>
+                            <field name="mother_name"/>
+                            <field name="religion_id"/>
+                        </group>
+                        <group>
+                            <field name="marital"/>
+                            <field name="country_id"/>
+                            <field name="bank_id"/>
+                            <field name="bank_account"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//button[@name='%(hr.plan_wizard_action)d']" position="replace"/>
+            <xpath expr="//header" position="inside">
+                <button type="object" name="verify_employee" string="Verify Employee" class="btn-primary" invisible="is_verified"/>
+                <field name="state" widget="statusbar"/>
+                <field name="is_verified" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_skills_employee_inherit" model="ir.ui.view">
+        <field name="name">hr.skills.employee.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_skills.hr_employee_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[contains(@class,'o_hr_skills_editable o_hr_skills_group o_group_resume col-lg-7 d-flex flex-column')]" 
+                position="replace"/>
+            <xpath expr="//div[contains(@class,'o_hr_skills_editable o_hr_skills_group o_group_skills col-lg-5 d-flex flex-column')]" 
+                position="replace"/>
+            <xpath expr="//div[@class='row']" position="after">
+                <separator string="CV"/>
+                <div class="o_form_sheet">
+                    <field name="cv" widget="pdf_viewer" nolabel="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    
+    <record model="ir.actions.act_window" id="hr.open_view_employee_list_my">
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+</odoo>

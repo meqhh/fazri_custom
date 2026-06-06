@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data noupdate="1">
+        <record id="bank_mandiri" model="res.bank">
+            <field name="name">Bank Mandiri</field>
+            <field name="bic">BMRIIDJA</field>
+        </record>
+
+        <record id="bank_bri" model="res.bank">
+            <field name="name">Bank Rakyat Indonesia (BRI)</field>
+            <field name="bic">BRINIDJA</field>
+        </record>
+
+        <record id="bank_bca" model="res.bank">
+            <field name="name">Bank Central Asia (BCA)</field>
+            <field name="bic">CENAIDJA</field>
+        </record>
+
+        <record id="bank_bni" model="res.bank">
+            <field name="name">Bank Negara Indonesia (BNI)</field>
+            <field name="bic">BNINIDJA</field>
+        </record>
+
+        <record id="bank_bsi" model="res.bank">
+            <field name="name">Bank Syariah Indonesia (BSI)</field>
+            <field name="bic">BSMDIDJA</field>
+        </record>
+
+        <record id="bank_btn" model="res.bank">
+            <field name="name">Bank Tabungan Negara (BTN)</field>
+            <field name="bic">BTANIDJA</field>
+        </record>
+
+        <record id="bank_cimb_niaga" model="res.bank">
+            <field name="name">Bank CIMB Niaga</field>
+            <field name="bic">BNIAIDJA</field>
+        </record>
+
+        <record id="bank_danamon" model="res.bank">
+            <field name="name">Bank Danamon Indonesia</field>
+            <field name="bic">BDINIDJA</field>
+        </record>
+
+    </data>
+</odoo>

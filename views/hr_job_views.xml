@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="hr_job_kanban_inherit" model="ir.ui.view">
+        <field name="name">hr.job.kanban.inherit</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-name='kanban-box']" position="replace">
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
+                            <div class="o_kanban_card_header d-flex align-items-baseline gap-1">
+                                <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">
+                                        <span><t t-esc="record.name.value"/></span>
+                                    </div>
+                                    <div class="text-muted">
+                                        <field name="user_id"/>
+                                    </div>
+                                    <div class="o_secondary" groups="base.group_multi_company">
+                                        <small><i class="fa fa-building-o" role="img" aria-label="Company" title="Company"/> <field name="company_id"/></small>
+                                    </div>
+                                    <div t-if="record.alias_email.value" class="o_secondary o_job_alias">
+                                        <small><i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"/> <field name="alias_id"/></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container o_recruitment_job_container o_kanban_card_content mt-0 mt-sm-3">
+                                <div class="row">
+                                    <div class="col-7">
+                                        <!-- <button class="btn btn-primary" name="227" type="action">
+                                            <field name="new_application_count"/> New Applications
+                                        </button> -->
+                                    </div>
+                                    <ul class="col-5 o_job_activities">
+                                        <li>
+                                            <a name="edit_job" type="edit" t-attf-class="{{ record.no_of_recruitment.raw_value &gt; 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" groups="hr_recruitment.group_hr_recruitment_user">
+                                                <field name="no_of_recruitment"/> To Recruit
+                                            </a>
+                                            <span t-attf-class="{{ record.no_of_recruitment.raw_value &gt; 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" groups="!hr_recruitment.group_hr_recruitment_user">
+                                                <field name="no_of_recruitment"/> More To Hire
+                                            </span>
+                                        </li>
+                                        <li t-if="record.application_count.raw_value &gt; 0">
+                                            <field name="application_count"/> Applications
+                                        </li>
+                                        <li class="text-warning" t-if="record.activities_today.raw_value &gt; 0">
+                                            <a name="action_open_today_activities" type="object" class="text-warning"><field name="activities_today"/> Activities Today</a>
+                                        </li>
+                                        <li t-if="record.activities_overdue.raw_value &gt; 0">
+                                            <a name="action_open_late_activities" type="object" class="text-danger"><field name="activities_overdue"/> Late Activities</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div name="kanban_boxes" class="row flex-nowrap" groups="hr_recruitment.group_hr_recruitment_user"/>
+                            </div>
+                        </div>
+                    </t>
+            </xpath>
+        </field>
+    </record> 
+
+    <record id="hr_job_form_inherit" model="ir.ui.view">
+        <field name="name">hr.job.form.inherit</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='department_id']" position="before">
+                <field name="manager_id" readonly="0"/>
+                <field name="is_open"/>
+                <field name="no_of_recruitment" string="Employee to Recruit"/>
+            </xpath>
+            <xpath expr="//label[@for='no_of_recruitment']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@name='recruitment_target']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_job_survey_inherit" model="ir.ui.view">
+        <field name="name">hr.job.form1.inherit</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='alias_name']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@name='alias_def']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_job_simple_form_inherit" model="ir.ui.view">
+        <field name="name">hr.job.simple.form.inherit</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_job_simple_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='alias_name']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@name='alias_def']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="company_id" invisible="1"/>
+                <field name="no_of_recruitment" class="o_job_name oe_inline" required="1" string="Employee to Recruit"/>
+                <field name="department_id" class="o_job_name oe_inline" required="1"  option="{'no_create': True}"/>
+                <field name="user_id" class="o_job_name oe_inline" required="1"  domain="[]" option="{'no_create': True}"/>
+                <field name="interviewer_ids" class="o_job_name oe_inline" required="1" domain="[]" option="{'no_create': True}" widget="many2many_avatar_user"/>
+                <field name="contract_type_id" class="o_job_name oe_inline" required="1" domain="[]" option="{'no_create': True}"/>
+                <field name="description" required="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
