@@ -8,6 +8,8 @@ class Whatsapp(models.Model):
     access_token = fields.Char('Access Token')
 
     def send_message(self, receiver, message):
+        # FOR DEBUG ONLY !!!
+        # return {'code': 200, 'results': {}, 'err': 'Whatsapp gateway is offline'}
         if not receiver or not message: return {
             'code': 500, 
             'error': 'No receiver phone number' if not receiver else 'No message to send'

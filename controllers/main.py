@@ -154,11 +154,38 @@ class MainController(http.Controller):
                 contract.unlink()
                 print(e)
                 return {'code': 500, 'err': f'Contract Creation Error: {e}'}
+
+            try:
+                ip_address = request.httprequest.environ.get('REMOTE_ADDR', False)
+                user_agent = request.httprequest.environ.get('HTTP_USER_AGENT', False)
+
+                sig_attachment = request.env['ir.attachment'].sudo().search([
+                    ('res_model', '=', employee._name),
+                    ('res_id', '=', employee.id),
+                    ('name', 'ilike', '_signature'),
+                ], limit=1)
+
+                contract.sudo()._create_or_update_candidate_signature_trail(
+                    signer_name=employee.name,
+                    signer_email=emp_param.get('email_address', False),
+                    signer_phone=emp_param.get('phone', False),
+                    signature_attachment_id=sig_attachment.id if sig_attachment else False,
+                    ip_address=ip_address,
+                    user_agent=user_agent,
+                    access_token=emp_param.get('token', False),
+                )
+
+                contract.sudo()._create_or_update_hr_pending_signature_trail()
+
+            except Exception as e:
+                _logger.warning('Failed to create signature trail: %s', e)
+            # ─────────────────────────────────────────────────────────────────
+
             hired_stage = request.env['hr.recruitment.stage'].sudo().search([('hired_stage', '=', True)], limit=1)
             offer.applicant_id.sudo().stage_id = hired_stage.id
             offer.state = 'accepted'
             return {'code': 200, 'err': ''}
-            
+
         return {
             'code': 500,
             'err': 'Failed to create employee or contract'
@@ -346,7 +373,7 @@ class MainController(http.Controller):
     @http.route(
         '/employer-sign/<string:token>', 
         type="http", 
-        auth="public",
+        auth="user",
         website=True,
         csrf=False
     )
@@ -371,7 +398,7 @@ class MainController(http.Controller):
     @http.route(
         '/employer-sign/submit/<string:token>',
         type='json',
-        auth='public',
+        auth='user',
         methods=['POST'],
         website=True,
         csrf=False
@@ -421,7 +448,52 @@ class MainController(http.Controller):
                 import logging
                 logging.getLogger(__name__).error("Failed to regenerate contract PDF: %s", e)
 
+        try:
+            Trail = request.env['hr.contract.signature.trail'].sudo()
+            now = fields.Datetime.now()
+
+            sig_attachment = request.env['ir.attachment'].sudo().create({
+                'name': f'employer_signature_{contract.id}.png',
+                'type': 'binary',
+                'datas': signature,
+                'res_model': contract._name,
+                'res_id': contract.id,
+                'mimetype': 'image/png',
+            })
+
+            existing_hr_trail = Trail.search([
+                ('contract_id', '=', contract.id),
+                ('signer_type', '=', 'hr'),
+            ], limit=1)
+
+            hr_vals = {
+                'signer_name': request.env.user.name,
+                'signer_user_id': request.env.user.id,
+                'state': 'signed',
+                'signed_at': now,
+                'signature_attachment_id': sig_attachment.id,
+                'ip_address': request.httprequest.environ.get('REMOTE_ADDR', False),
+                'user_agent': request.httprequest.environ.get('HTTP_USER_AGENT', False),
+                'note': 'Contract has been signed by HR.',
+            }
+
+            if existing_hr_trail:
+                existing_hr_trail.write(hr_vals)
+            else:
+                hr_vals.update({
+                    'contract_id': contract.id,
+                    'signer_type': 'hr',
+                    'document_created_at': now,
+                })
+                Trail.create(hr_vals)
+
+            contract._update_signature_state()
+
+        except Exception as e:
+            _logger.warning('Failed to update HR signature trail: %s', e)
+
         return {'code': 200, 'err': ''}
+
 
 
     @http.route(
@@ -510,19 +582,19 @@ class MainController(http.Controller):
             cover_letter = raw_data.get('cover_letter', '')
 
             if not partner_name or not email_from or not partner_phone or not job_id:
-                return {'code': 400, 'err': 'Mohon lengkapi semua field wajib.'}
+                return {'code': 400, 'err': 'Please fill in all required fields.'}
 
             email_regex = r'^[^\s@]+@[^\s@]+\.[^\s@]+$'
             if not re.match(email_regex, email_from):
-                return {'code': 400, 'err': 'Format email tidak valid.'}
+                return {'code': 400, 'err': 'Invalid email format.'}
 
             phone_regex = r'^[\d\+\-\s]{10,20}$'
             if not re.match(phone_regex, partner_phone):
-                return {'code': 400, 'err': 'Format nomor telepon tidak valid. Minimal 10 karakter.'}
+                return {'code': 400, 'err': 'Invalid phone number format. Minimum 10 characters.'}
 
             job = request.env['hr.job'].sudo().browse(int(job_id))
             if not job.exists():
-                return {'code': 400, 'err': 'Posisi yang dipilih tidak ditemukan.'}
+                return {'code': 400, 'err': 'The selected position was not found.'}
 
             existing_applicant = request.env['hr.applicant'].sudo().search([
                 ('email_from', '=', email_from),
@@ -534,9 +606,9 @@ class MainController(http.Controller):
             if existing_applicant:
                 return {
                     'code': 409,
-                    'err': f'Anda sudah pernah melamar untuk posisi "{job.name}". '
-                           f'Lamaran Anda sedang dalam proses seleksi. '
-                           f'Silakan hubungi HR untuk informasi lebih lanjut.'
+                    'err': f'You have already applied for the "{job.name}" position. '
+                            f'Your application is currently being processed. '
+                            f'Please contact HR for more information.'
                 }
 
             applicant_vals = {

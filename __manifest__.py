@@ -43,6 +43,7 @@
         "views/hr_applicant_views.xml",
         "views/salary_offer_form_view.xml",
         "views/hr_employee_views.xml",
+        "views/hr_contract_signature_trail_views.xml",
         "views/hr_contract_views.xml",
         "views/hr_contract_template_views.xml",
         "views/hr_religion_views.xml",

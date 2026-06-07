@@ -8,6 +8,7 @@ from . import hr_religion
 from . import hr_employee
 from . import hr_skill
 from . import hr_contract
+from . import hr_contract_signature_trail
 from . import hr_department
 from . import offer_refuse
 from . import api_log
