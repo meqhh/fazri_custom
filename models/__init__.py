@@ -1,4 +1,5 @@
 from . import salary_offer
+from . import salary_offer_otp
 from . import hr_recruitment
 from . import hr_applicant
 from . import res_company

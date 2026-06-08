@@ -11,3 +11,4 @@ access_api_log_response,api.log.response,model_api_log_response,,1,1,1,1
 access_whatsapp_conf,whatsapp.conf,model_whatsapp_conf,,1,1,1,1
 access_whatsapp_applicant_wizard,whatsapp.applicant.wizard,model_whatsapp_applicant_wizard,,1,1,1,1
 access_hr_contract_signature_trail_public,hr.contract.signature.trail.public,model_hr_contract_signature_trail,,1,0,0,0
+access_salary_offer_otp,salary.offer.otp,model_salary_offer_otp,,1,1,1,1

@@ -42,6 +42,7 @@
         "views/hr_recruitment_views.xml",
         "views/hr_applicant_views.xml",
         "views/salary_offer_form_view.xml",
+        "views/salary_offer_otp_views.xml",
         "views/hr_employee_views.xml",
         "views/hr_contract_signature_trail_views.xml",
         "views/hr_contract_views.xml",
@@ -68,6 +69,7 @@
         ],
         'web.assets_frontend': [
             'fazri_custom/static/src/js/salary_offer.js',
+            'fazri_custom/static/src/js/salary_offer_otp.js',
             'fazri_custom/static/src/js/employer_sign.js',
             'fazri_custom/static/src/js/apply_form.js',
         ],

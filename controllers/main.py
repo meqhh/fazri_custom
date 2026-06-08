@@ -11,6 +11,8 @@ import re
 
 _logger = logging.getLogger(__name__)
 
+_OTP_SESSION_KEY = 'otp_verified_offer_{}'
+
 class MainController(http.Controller):
 
     def _get_offer_obj(self, offer_id):
@@ -24,9 +26,20 @@ class MainController(http.Controller):
         website=True,
         csrf=False
     )
-    def salary_offer_form(self, offer_id: object,**args):
+    def salary_offer_form(self, offer_id: object, **args):
         token = args.get('token', False)
         offer = self._get_offer_obj(offer_id).sudo()
+
+        if not offer or offer.access_token != token:
+            return request.not_found()
+
+        session_key = _OTP_SESSION_KEY.format(offer_id)
+
+        if not request.session.get(session_key):
+            return request.redirect(
+                f'/candidate/salary_offer/{offer_id}/otp?token={token}'
+            )
+
         emp_countries = ['ID', 'MY', 'PH', 'SG', 'JP']
         country = request.env['res.country'].search([
             ('code', 'in', emp_countries)
@@ -39,10 +52,8 @@ class MainController(http.Controller):
             'countries': country,
             'banks': banks,
             'religions': religions,
-            # 'preview_url': '/report/pdf/fazri_custom.contract_base_template/%s' % offer.id
             'preview_url': self._get_preview_url(offer)
         }
-        if offer.access_token != token or not offer: return request.not_found()
 
         if offer.state == 'proposed':
             return self._render_form(form_dict=form_dict)
@@ -201,7 +212,172 @@ class MainController(http.Controller):
         if not offer_obj: return False
         return offer_obj
 
-    def _parse_signature(self, sign:str) -> str:
+    @http.route(
+        '/candidate/salary_offer/<int:offer_id>/otp',
+        type='http',
+        auth='public',
+        website=True,
+        csrf=False
+    )
+    def salary_offer_otp_page(self, offer_id, **args):
+        token = args.get('token', False)
+        offer = self._get_offer_obj(offer_id).sudo()
+
+        if not offer or offer.access_token != token:
+            return request.not_found()
+
+        session_key = _OTP_SESSION_KEY.format(offer_id)
+        if request.session.get(session_key):
+            return request.redirect(
+                f'/candidate/salary_offer/{offer_id}?token={token}'
+            )
+
+        if offer.state in ['accepted', 'rejected', 'cancel']:
+            return request.redirect(f'/thank-you/{offer.access_token}')
+
+        phone = offer.phone_number or ''
+        masked_phone = phone[:4] + '*' * max(0, len(phone) - 7) + phone[-3:] if len(phone) > 7 else phone
+
+        return request.render('fazri_custom.salary_offer_otp_request_template', {
+            'offer': offer,
+            'masked_phone': masked_phone,
+            'token': token,
+        })
+
+    @http.route(
+        '/candidate/salary_offer/otp/send',
+        type='json',
+        auth='public',
+        methods=['POST'],
+        website=True,
+        csrf=False
+    )
+    def salary_offer_otp_send(self, **kwargs):
+        try:
+            body = json.loads(kwargs.get('body', '{}'))
+            offer_id = body.get('offer_id')
+            token = body.get('token')
+
+            if not offer_id or not token:
+                return {'code': 400, 'err': 'Parameter tidak lengkap.'}
+
+            offer = request.env['salary.offer'].sudo().browse(int(offer_id))
+            if not offer.exists() or offer.access_token != token:
+                return {'code': 403, 'err': 'Token tidak valid.'}
+
+            if offer.state in ['accepted', 'rejected', 'cancel']:
+                return {'code': 400, 'err': 'Penawaran sudah tidak aktif.'}
+
+            ip_address = request.httprequest.environ.get('REMOTE_ADDR', False)
+            otp_record = request.env['salary.offer.otp'].sudo().generate_otp(
+                offer_id=offer.id,
+                ip_address=ip_address,
+            )
+
+            whatsapp = request.env['whatsapp.conf'].sudo().search([], limit=1)
+            if whatsapp and offer.phone_number:
+                message = (
+                    "Kode OTP penawaran kerja Anda adalah\n"
+                    f"*{otp_record.otp_code}*\n\n"
+                    "Kode ini berlaku selama 2 menit.\n"
+                    "Jangan bagikan kode ini kepada siapa pun."
+                )
+                wa_result = whatsapp.send_message(
+                    receiver=offer.phone_number,
+                    message=message,
+                )
+                _logger.info(
+                    'OTP sent to %s for offer %s — WA result: %s',
+                    offer.phone_number, offer.id, wa_result
+                )
+            else:
+                _logger.warning(
+                    'WhatsApp config not found or phone_number empty for offer %s', offer.id
+                )
+
+            return {'code': 200, 'err': ''}
+
+        except Exception as e:
+            _logger.error('OTP send error: %s', e)
+            return {'code': 500, 'err': str(e)}
+
+    @http.route(
+        '/candidate/salary_offer/otp/verify',
+        type='json',
+        auth='public',
+        methods=['POST'],
+        website=True,
+        csrf=False
+    )
+    def salary_offer_otp_verify(self, **kwargs):
+        try:
+            body = json.loads(kwargs.get('body', '{}'))
+            offer_id = body.get('offer_id')
+            token = body.get('token')
+            otp_code = str(body.get('otp_code', '')).strip()
+
+            if not offer_id or not token or not otp_code:
+                return {'code': 400, 'err': 'Parameter tidak lengkap.'}
+
+            offer = request.env['salary.offer'].sudo().browse(int(offer_id))
+            if not offer.exists() or offer.access_token != token:
+                return {'code': 403, 'err': 'Token tidak valid.'}
+
+            otp_record = request.env['salary.offer.otp'].sudo().search([
+                ('offer_id', '=', offer.id),
+                ('otp_code', '=', otp_code),
+                ('state', '=', 'pending'),
+            ], limit=1, order='create_date desc')
+
+            if not otp_record:
+                return {'code': 400, 'err': 'Kode OTP tidak ditemukan atau sudah digunakan.'}
+
+            if not otp_record.is_valid():
+                return {'code': 400, 'err': 'Kode OTP sudah kedaluwarsa. Silakan minta OTP baru.'}
+
+            otp_record.mark_used()
+            session_key = _OTP_SESSION_KEY.format(offer_id)
+            request.session[session_key] = True
+
+            redirect_url = f'/candidate/salary_offer/{offer.id}?token={token}'
+            return {'code': 200, 'err': '', 'redirect': redirect_url}
+
+        except Exception as e:
+            _logger.error('OTP verify error: %s', e)
+            return {'code': 500, 'err': str(e)}
+
+    @http.route(
+        '/candidate/salary_offer/<int:offer_id>/otp/verify',
+        type='http',
+        auth='public',
+        website=True,
+        csrf=False
+    )
+    def salary_offer_otp_verify_page(self, offer_id, **args):
+        """Halaman input 6-digit OTP (step 2)."""
+        token = args.get('token', False)
+        offer = self._get_offer_obj(offer_id).sudo()
+
+        if not offer or offer.access_token != token:
+            return request.not_found()
+
+        # Jika session sudah valid, langsung ke form
+        session_key = _OTP_SESSION_KEY.format(offer_id)
+        if request.session.get(session_key):
+            return request.redirect(
+                f'/candidate/salary_offer/{offer_id}?token={token}'
+            )
+
+        if offer.state in ['accepted', 'rejected', 'cancel']:
+            return request.redirect(f'/thank-you/{offer.access_token}')
+
+        return request.render('fazri_custom.salary_offer_otp_verify_template', {
+            'offer': offer,
+            'token': token,
+        })
+
+
+    def _parse_signature(self, sign: str) -> str:
         if not sign or sign == ' ': return ''
 
         if ',' in sign:

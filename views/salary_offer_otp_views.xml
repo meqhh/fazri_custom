@@ -1,0 +1,295 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         Template 1: Halaman Kirim OTP (Step 1)
+    ════════════════════════════════════════════════════════════════════ -->
+    <template id="salary_offer_otp_request_template" name="OTP Request Page">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+
+            <div
+                id="otp-app"
+                class="salary-otp-page"
+                t-att-data-offer-id="offer.id"
+                t-att-data-token="token"
+                data-step="request"
+            >
+                <div class="container-sm mt-5">
+
+                    <!-- Judul halaman -->
+                    <div class="d-flex justify-content-center mb-3 text-center">
+                        <h3>Verifikasi Identitas Anda</h3>
+                    </div>
+
+                    <div class="container pb-5">
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-md-8 col-lg-6">
+
+                                <!-- Card utama -->
+                                <div class="card shadow-sm mb-4">
+                                    <div class="card-header bg-dark text-white">
+                                        <h5 class="mb-0">Kirim Kode OTP</h5>
+                                    </div>
+                                    <div class="card-body">
+
+                                        <p class="text-muted mb-4">
+                                            Untuk keamanan, kami akan mengirimkan kode verifikasi (OTP)
+                                            ke nomor WhatsApp yang terdaftar. Klik tombol di bawah untuk
+                                            menerima kode tersebut.
+                                        </p>
+
+                                        <!-- Nomor HP yang di-masking -->
+                                        <div class="otp-phone-badge mb-4">
+                                            <i class="fa fa-whatsapp me-2" style="color:#25d366; font-size:1.2rem;"/>
+                                            <span class="fw-bold" t-esc="masked_phone"/>
+                                        </div>
+
+                                        <!-- Alert area -->
+                                        <div id="otp-alert" class="alert d-none" role="alert"></div>
+
+                                        <!-- Tombol Kirim -->
+                                        <div class="d-grid gap-2">
+                                            <button
+                                                id="btn-send-otp"
+                                                class="btn btn-primary btn-otp-action"
+                                                type="button"
+                                            >
+                                                <span id="btn-send-text">
+                                                    <i class="fa fa-paper-plane me-2"/>
+                                                    Kirim Kode OTP
+                                                </span>
+                                                <span id="btn-send-loader" class="otp-spinner d-none"/>
+                                            </button>
+                                        </div>
+
+                                        <p class="text-muted mt-3 mb-0" style="font-size:0.85rem;">
+                                            <i class="fa fa-info-circle me-1"/>
+                                            Pastikan nomor WhatsApp Anda aktif dan dapat menerima pesan.
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                <![CDATA[
+                .salary-otp-page { min-height: 100vh; background: #f8f9fa; }
+
+                .otp-phone-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    background: #f0fdf4;
+                    border: 1px solid #bbf7d0;
+                    border-radius: 8px;
+                    padding: 10px 18px;
+                    color: #166534;
+                    font-size: 1rem;
+                }
+
+                .btn-otp-action {
+                    padding: 12px 24px;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    border-radius: 8px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    transition: all 0.2s ease;
+                }
+                .btn-otp-action:disabled { opacity: 0.65; cursor: not-allowed; }
+
+                .otp-spinner {
+                    display: inline-block;
+                    width: 18px; height: 18px;
+                    border: 2px solid rgba(255,255,255,0.4);
+                    border-top-color: #fff;
+                    border-radius: 50%;
+                    animation: otp-spin 0.7s linear infinite;
+                }
+                @keyframes otp-spin { to { transform: rotate(360deg); } }
+
+                .d-none { display: none !important; }
+                ]]>
+            </style>
+        </t>
+    </template>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         Template 2: Halaman Input OTP (Step 2)
+    ════════════════════════════════════════════════════════════════════ -->
+    <template id="salary_offer_otp_verify_template" name="OTP Verify Page">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+
+            <div
+                id="otp-app"
+                class="salary-otp-page"
+                t-att-data-offer-id="offer.id"
+                t-att-data-token="token"
+                data-step="verify"
+            >
+                <div class="container-sm mt-5">
+
+                    <!-- Judul halaman -->
+                    <div class="d-flex justify-content-center mb-3 text-center">
+                        <h3>Masukkan Kode OTP</h3>
+                    </div>
+
+                    <div class="container pb-5">
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-md-8 col-lg-6">
+
+                                <!-- Card utama -->
+                                <div class="card shadow-sm mb-4">
+                                    <div class="card-header bg-dark text-white">
+                                        <h5 class="mb-0">Verifikasi Kode OTP</h5>
+                                    </div>
+                                    <div class="card-body">
+
+                                        <p class="text-muted mb-4">
+                                            Kode 6 digit telah dikirim ke WhatsApp Anda.
+                                            Masukkan kode tersebut di bawah ini sebelum waktu habis.
+                                        </p>
+
+                                        <!-- Alert area -->
+                                        <div id="otp-alert" class="alert d-none" role="alert"></div>
+
+                                        <!-- 6-Box OTP Input -->
+                                        <div class="otp-boxes-wrap mb-3" id="otp-boxes">
+                                            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off" id="otp-0"/>
+                                            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off" id="otp-1"/>
+                                            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off" id="otp-2"/>
+                                            <span class="otp-dash">—</span>
+                                            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off" id="otp-3"/>
+                                            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off" id="otp-4"/>
+                                            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off" id="otp-5"/>
+                                        </div>
+
+                                        <!-- Countdown Timer -->
+                                        <div class="otp-timer-wrap mb-4">
+                                            <i class="fa fa-clock-o me-1"/>
+                                            <span>Kode berlaku selama&#160;</span>
+                                            <span id="otp-countdown" class="otp-timer-count fw-bold">02:00</span>
+                                        </div>
+
+                                        <!-- Tombol Verifikasi -->
+                                        <div class="d-grid gap-2 mb-3">
+                                            <button id="btn-verify-otp" class="btn btn-primary btn-otp-action" type="button">
+                                                <span id="btn-verify-text">
+                                                    <i class="fa fa-check-circle me-2"/>
+                                                    Verifikasi
+                                                </span>
+                                                <span id="btn-verify-loader" class="otp-spinner d-none"/>
+                                            </button>
+                                        </div>
+
+                                        <!-- Resend -->
+                                        <div class="text-center">
+                                            <span class="text-muted" style="font-size:0.88rem;">
+                                                Tidak menerima kode?&#160;
+                                            </span>
+                                            <button
+                                                id="btn-resend"
+                                                class="btn btn-link p-0 otp-btn-resend"
+                                                type="button"
+                                                disabled="disabled"
+                                            >
+                                                Kirim ulang
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                <![CDATA[
+                .salary-otp-page { min-height: 100vh; background: #f8f9fa; }
+
+                /* ── 6-Box OTP ── */
+                .otp-boxes-wrap {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                }
+                .otp-box {
+                    width: 52px; height: 58px;
+                    border: 2px solid #dee2e6;
+                    border-radius: 8px;
+                    font-size: 1.6rem;
+                    font-weight: 700;
+                    text-align: center;
+                    color: #212529;
+                    background: #fff;
+                    outline: none;
+                    transition: border-color 0.2s, box-shadow 0.2s;
+                    caret-color: #0d6efd;
+                }
+                .otp-box:focus {
+                    border-color: #0d6efd;
+                    box-shadow: 0 0 0 3px rgba(13,110,253,0.18);
+                }
+                .otp-box.filled { border-color: #198754; }
+                .otp-dash { color: #6c757d; font-size: 1.3rem; margin: 0 2px; }
+
+                /* ── Timer ── */
+                .otp-timer-wrap {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: #6c757d;
+                    font-size: 0.88rem;
+                }
+                .otp-timer-count { color: #0d6efd; font-variant-numeric: tabular-nums; }
+                .otp-timer-count.expired { color: #dc3545; }
+
+                /* ── Tombol ── */
+                .btn-otp-action {
+                    padding: 12px 24px;
+                    font-size: 1rem; font-weight: 600;
+                    border-radius: 8px;
+                    display: flex; align-items: center; justify-content: center; gap: 8px;
+                    transition: all 0.2s ease;
+                }
+                .btn-otp-action:disabled { opacity: 0.65; cursor: not-allowed; }
+
+                .otp-btn-resend {
+                    font-size: 0.88rem; font-weight: 600;
+                    color: #0d6efd; text-decoration: underline;
+                    vertical-align: baseline;
+                }
+                .otp-btn-resend:disabled { color: #6c757d; text-decoration: none; }
+                .otp-btn-resend:hover:not(:disabled) { color: #0a58ca; }
+
+                /* ── Spinner ── */
+                .otp-spinner {
+                    display: inline-block;
+                    width: 18px; height: 18px;
+                    border: 2px solid rgba(255,255,255,0.4);
+                    border-top-color: #fff;
+                    border-radius: 50%;
+                    animation: otp-spin 0.7s linear infinite;
+                }
+                @keyframes otp-spin { to { transform: rotate(360deg); } }
+
+                .d-none { display: none !important; }
+                ]]>
+            </style>
+        </t>
+    </template>
+
+</odoo>

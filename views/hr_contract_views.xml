@@ -40,8 +40,8 @@
             </xpath>
             <xpath expr="//header" position="inside">
                 <button type="object" name="verify_contract" string="Verify Contract" class="btn-primary" invisible="is_verified"/>
-                <button type="object" name="action_employer_sign" string="Employer Sign" class="btn-primary"
-                    invisible="not is_verified or is_employer_signed"/>
+                <!-- <button type="object" name="action_employer_sign" string="Employer Sign" class="btn-primary"
+                    invisible="not is_verified or is_employer_signed"/> -->
                 <field name="is_verified" invisible="1"/>
                 <field name="is_employer_signed" invisible="1"/>
             </xpath>
