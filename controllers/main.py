@@ -71,7 +71,7 @@ class MainController(http.Controller):
 
         offer_obj = self._get_offer_from_token(token)
         if offer_obj.state in ['accepted', 'rejected']: return {'code': 400, 'err': 'You Can\'t resubmit submitted form'}
-        refuse_obj = request.env['offer.refuse']
+        refuse_obj = request.env['offer.refuse'].sudo()
         reason = json.loads(args['body'])
         
         refuse_obj = refuse_obj.create({
@@ -85,7 +85,7 @@ class MainController(http.Controller):
         })
 
         activity_type = request.env.ref('mail.mail_activity_data_todo')
-        request.env['mail.activity'].create({
+        request.env['mail.activity'].sudo().create({
             'res_model_id': request.env['ir.model']._get_id(refuse_obj._name),
             'res_id': refuse_obj.id,
             'activity_type_id': activity_type.id,
@@ -473,12 +473,15 @@ class MainController(http.Controller):
         applicant = offer.applicant_id
         job = False if not applicant else applicant.job_id
         contract_obj = request.env['hr.contract'].sudo()
+        wage = param.get('wage', 0)
+        if wage:
+            wage = float(wage.replace('Rp ', '').replace('.', ''))
 
         contract_data = {
             'employee_id': emp_obj.id,
             'date_start': offer.contract_start,
             'date_end': offer.contract_end,
-            'wage': param.get('wage', 0),
+            'wage': float(wage),
             'contract_type_id': job.contract_type_id.id,
             'offer_id': offer.id,
         }

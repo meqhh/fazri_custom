@@ -83,14 +83,14 @@ class HrContract(models.Model):
             activity.action_feedback(feedback="Data Has Been Verified")
             self.is_verified = True
 
-    # def action_employer_sign(self):
-    #     self.ensure_one()
-    #     return {
-    #         'type': 'ir.actions.act_url',
-    #         'name': 'Employer Sign Contract',
-    #         'target': '_blank',
-    #         'url': '/employer-sign/%s' % self.employer_sign_token,
-    #     }
+    def action_employer_sign(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'name': 'Employer Sign Contract',
+            'target': '_blank',
+            'url': '/employer-sign/%s' % self.employer_sign_token,
+        }
 
     def _create_or_update_candidate_signature_trail(
         self,

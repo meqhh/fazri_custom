@@ -21,11 +21,11 @@
                         </group>
                     </group>
                     <group>
-                        <group string="Technical Information">
+                        <!-- <group string="Technical Information">
                             <field name="ip_address" readonly="1"/>
                             <field name="user_agent" readonly="1"/>
                             <field name="access_token" readonly="1"/>
-                        </group>
+                        </group> -->
                         <group string="Attachment">
                             <field name="signature_image"
                                 widget="image"

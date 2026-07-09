@@ -177,7 +177,7 @@
                                             <label for="wage" style="font-weight:bold;">
                                                 Wage Amount
                                             </label>
-                                            <input type="text" name="wage" id="wage" class="form-control mb-3" t-att-value="offer.salary_offer" disabled="1"/>
+                                            <input type="text" name="wage" id="wage" class="form-control mb-3" t-att-value="'Rp {:,.0f}'.format(offer.salary_offer or 0).replace(',', '.')" disabled="1"/>
                                         </div>
                                         <div class="mb-2">
                                             <a t-att-href="preview_url"

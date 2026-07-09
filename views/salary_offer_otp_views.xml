@@ -1,9 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         Template 1: Halaman Kirim OTP (Step 1)
-    ════════════════════════════════════════════════════════════════════ -->
     <template id="salary_offer_otp_request_template" name="OTP Request Page">
         <t t-call="web.frontend_layout">
             <t t-set="no_header" t-value="True"/>
@@ -18,7 +15,6 @@
             >
                 <div class="container-sm mt-5">
 
-                    <!-- Judul halaman -->
                     <div class="d-flex justify-content-center mb-3 text-center">
                         <h3>Verifikasi Identitas Anda</h3>
                     </div>
@@ -27,7 +23,6 @@
                         <div class="row justify-content-center">
                             <div class="col-12 col-md-8 col-lg-6">
 
-                                <!-- Card utama -->
                                 <div class="card shadow-sm mb-4">
                                     <div class="card-header bg-dark text-white">
                                         <h5 class="mb-0">Kirim Kode OTP</h5>
@@ -40,16 +35,13 @@
                                             menerima kode tersebut.
                                         </p>
 
-                                        <!-- Nomor HP yang di-masking -->
                                         <div class="otp-phone-badge mb-4">
                                             <i class="fa fa-whatsapp me-2" style="color:#25d366; font-size:1.2rem;"/>
                                             <span class="fw-bold" t-esc="masked_phone"/>
                                         </div>
 
-                                        <!-- Alert area -->
                                         <div id="otp-alert" class="alert d-none" role="alert"></div>
 
-                                        <!-- Tombol Kirim -->
                                         <div class="d-grid gap-2">
                                             <button
                                                 id="btn-send-otp"
@@ -121,9 +113,6 @@
         </t>
     </template>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         Template 2: Halaman Input OTP (Step 2)
-    ════════════════════════════════════════════════════════════════════ -->
     <template id="salary_offer_otp_verify_template" name="OTP Verify Page">
         <t t-call="web.frontend_layout">
             <t t-set="no_header" t-value="True"/>
@@ -138,7 +127,6 @@
             >
                 <div class="container-sm mt-5">
 
-                    <!-- Judul halaman -->
                     <div class="d-flex justify-content-center mb-3 text-center">
                         <h3>Masukkan Kode OTP</h3>
                     </div>
@@ -147,7 +135,6 @@
                         <div class="row justify-content-center">
                             <div class="col-12 col-md-8 col-lg-6">
 
-                                <!-- Card utama -->
                                 <div class="card shadow-sm mb-4">
                                     <div class="card-header bg-dark text-white">
                                         <h5 class="mb-0">Verifikasi Kode OTP</h5>
@@ -159,10 +146,8 @@
                                             Masukkan kode tersebut di bawah ini sebelum waktu habis.
                                         </p>
 
-                                        <!-- Alert area -->
                                         <div id="otp-alert" class="alert d-none" role="alert"></div>
 
-                                        <!-- 6-Box OTP Input -->
                                         <div class="otp-boxes-wrap mb-3" id="otp-boxes">
                                             <input class="otp-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off" id="otp-0"/>
                                             <input class="otp-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off" id="otp-1"/>
@@ -173,14 +158,12 @@
                                             <input class="otp-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off" id="otp-5"/>
                                         </div>
 
-                                        <!-- Countdown Timer -->
                                         <div class="otp-timer-wrap mb-4">
                                             <i class="fa fa-clock-o me-1"/>
                                             <span>Kode berlaku selama&#160;</span>
                                             <span id="otp-countdown" class="otp-timer-count fw-bold">02:00</span>
                                         </div>
 
-                                        <!-- Tombol Verifikasi -->
                                         <div class="d-grid gap-2 mb-3">
                                             <button id="btn-verify-otp" class="btn btn-primary btn-otp-action" type="button">
                                                 <span id="btn-verify-text">
@@ -191,7 +174,6 @@
                                             </button>
                                         </div>
 
-                                        <!-- Resend -->
                                         <div class="text-center">
                                             <span class="text-muted" style="font-size:0.88rem;">
                                                 Tidak menerima kode?&#160;
