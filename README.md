@@ -2,7 +2,9 @@
 
 **Versi:** 17.0.0.1  
 **Author:** [Fazri Muhammad Yazid](https://github.com/meqhh)  
-**NIM:** 3312311050
+**NIM:** 3312311050  
+**Jurusan:** Teknik Informatika  
+**Program Studi:** [Teknik Informatika]  
 **Lisensi:** LGPL-3  
 **Kompatibel dengan:** Odoo 17 Community
 
